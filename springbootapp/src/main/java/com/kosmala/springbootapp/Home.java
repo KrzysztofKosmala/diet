@@ -7,6 +7,7 @@ import com.kosmala.springbootapp.exception.AppException;
 import com.kosmala.springbootapp.repository.RoleRepository;
 import com.kosmala.springbootapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,9 +22,10 @@ public class Home
 
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
-
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home() {
         return ("<h1>Welcome</h1>");
     }
@@ -33,10 +35,10 @@ public class Home
     public String create()
     {
         User user = new User();
-        user.setEmail("eksmkrz@ericsson.com");
-        user.setUsername("Kosmala");
-        user.setPassword("password");
-        user.setName("kosmita");
+        user.setEmail("kkosmala9@gmail.com");
+        user.setUsername("Kosmi");
+        user.setPassword(passwordEncoder.encode("password"));
+        user.setName("krzys");
 
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(() -> new AppException("User Role not set."));;
 

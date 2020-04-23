@@ -1,22 +1,26 @@
 package com.kosmala.springbootapp.security;
 
-/*
+import com.kosmala.springbootapp.entity.User;
+import com.kosmala.springbootapp.exception.ResourceNotFoundException;
 import com.kosmala.springbootapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-*/
 
-public class CustomUserDetailsService/* implements UserDetailsService*/
+@Service
+public class CustomUserDetailsService implements UserDetailsService
 {
-/*    @Autowired
+    @Autowired
     UserRepository userRepository;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String usernameOrEmail)
-            throws UsernameNotFoundException {
-        // Let people login with either username or email
+            throws UsernameNotFoundException
+    {
         User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with username or email : " + usernameOrEmail)
@@ -32,6 +36,6 @@ public class CustomUserDetailsService/* implements UserDetailsService*/
         );
 
         return UserPrincipal.create(user);
-    }*/
+    }
 
 }
