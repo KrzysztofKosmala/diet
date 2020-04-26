@@ -65,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/",
                         "/favicon.ico",
@@ -77,13 +78,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                         "/**/*.js")
                 .permitAll()
                 .antMatchers("/api/auth/**",
-                        "/createMe")
+                        "/home", "/createMe")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
 
-        // Add our custom JWT security filter
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+ /*       // Add our custom JWT security filter
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);*/
 
     }
 }

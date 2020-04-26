@@ -34,8 +34,6 @@ public class JwtTokenProvider
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
-
-
         return Jwts.builder()
                 .setSubject(Long.toString(userPrincipal.getId()))
                 .claim("email", userPrincipal.getEmail())
@@ -50,15 +48,12 @@ public class JwtTokenProvider
                 .compact();
     }
 
-    //generate userDetails based on token
     public UserDetails generateUserDetailsBasedOnToken(String token)
     {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
                 .getBody();
-
-
 
         Set<SimpleGrantedAuthority> simpleGrantedAuthorities = ((List<Map<String, String>> ) claims.get("authorities")).stream()
                 .map(m -> new SimpleGrantedAuthority(m.get("authority"))).collect(Collectors.toSet());
@@ -71,17 +66,6 @@ public class JwtTokenProvider
                 (String) claims.get("forSureItsNotPassword"),
                 simpleGrantedAuthorities);
     }
-
-    public Long getUserIdFromJWT(String token)
-    {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-
-        return Long.parseLong(claims.getSubject());
-    }
-
     public boolean validateToken(String authToken)
     {
         try {

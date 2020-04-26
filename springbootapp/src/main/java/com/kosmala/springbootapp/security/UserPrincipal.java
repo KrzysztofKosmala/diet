@@ -2,17 +2,20 @@ package com.kosmala.springbootapp.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kosmala.springbootapp.entity.User;
-import lombok.Data;
+import com.kosmala.springbootapp.entity.DetailedUserInfo;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@Setter
 public class UserPrincipal implements UserDetails
 {
     private Long id;
@@ -26,6 +29,8 @@ public class UserPrincipal implements UserDetails
 
     @JsonIgnore
     private String password;
+
+    private DetailedUserInfo detailedUserInfo;
 
     private Collection<? extends GrantedAuthority> authorities;
 
