@@ -36,10 +36,10 @@ public class Home
     public String create()
     {
         User user = new User();
-        user.setEmail("kkosmala9@gmail.com");
-        user.setUsername("Kosmi");
+        user.setEmail("lewandowski@gmail.com");
+        user.setUsername("lewy");
         user.setPassword(passwordEncoder.encode("password"));
-        user.setName("krzys");
+        user.setName("bobek");
 
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(() -> new AppException("User Role not set."));;
 

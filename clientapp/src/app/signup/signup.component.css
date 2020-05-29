@@ -1,0 +1,33 @@
+
+.main-div mat-card
+{
+  padding: 0px;
+
+}
+.main-div {
+
+}
+.form-form
+{
+  padding: 15px;
+}
+
+.icon {
+
+}
+
+.mat-card
+{
+  height: 28%;
+}
+.child-div
+{
+  padding-top: 10%;
+  padding-right: 17%;
+  padding-left: 58%;
+  height: 100%;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

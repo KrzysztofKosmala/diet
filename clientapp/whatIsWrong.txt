@@ -1,0 +1,3 @@
+ikony na srodek
+zdjecie w tle nie responsywne
+przy zmienjszaniu logowanie/rejestrachja chowa sie pod footer

@@ -1,0 +1,53 @@
+
+<div  fxFlexFill class="main-div">
+  <div  class="child-div">
+  <mat-card >
+    <mat-toolbar class="bg-dark white-text">Login
+      <span class="spacer"></span>
+      <mat-icon class="icon" aria-hidden="false" aria-label="Example user verified icon" [routerLink]="['']">keyboard_backspace</mat-icon>
+    </mat-toolbar>
+
+    <div
+      *ngIf="invalidLogin"
+      class="alert alert-danger">Invalid username and/or password.
+    </div>
+
+    <form  class="form-form" [formGroup]="form" fxLayoutAlign="stretch" fxLayout="column">
+    <mat-form-field>
+    <input matInput
+           #usernameOrEmail
+      type="usernameOrEmail"
+      id="inputUsernameOrEmail"
+           formControlName="usernameOrEmail"
+      placeholder="Username or Email"
+      required autofocus
+    >
+      <mat-error>
+        {{ formErrors['usernameOrEmail'] }}
+      </mat-error>
+    </mat-form-field>
+
+      <mat-form-field>
+      <input matInput
+        type="password"
+        id="inputPassword"
+             formControlName="password"
+        placeholder="Password"
+        required>
+        <mat-error>
+          {{ formErrors['password'] }}
+        </mat-error>
+      </mat-form-field>
+
+    <button mat-raised-button
+            [disabled]="!form.valid"
+            (click)="login(form.value);"
+            color="primary">Login
+    </button>
+    </form>
+
+  </mat-card>
+  </div>
+</div>
+
+

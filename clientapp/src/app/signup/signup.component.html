@@ -1,0 +1,112 @@
+<div  fxFlexFill class="main-div">
+  <div  class="child-div">
+    <mat-card >
+      <mat-toolbar class="bg-dark white-text">Create account
+        <span class="spacer"></span>
+        <mat-icon class="icon" aria-hidden="false" aria-label="Example user verified icon" [routerLink]="['']">keyboard_backspace</mat-icon>
+      </mat-toolbar>
+
+      <div
+        *ngIf="invalidTry"
+        class="alert alert-danger">{{invalidMessage}}
+      </div>
+      <form class="form-form" [formGroup]="form" fxLayoutAlign="stretch" fxLayout="column">
+        <mat-form-field>
+          <input matInput
+                 #email
+                 spellcheck="false"
+                 placeholder="Email"
+                 formControlName="email">
+          <mat-hint>
+            Email will never be shared or sold.
+          </mat-hint>
+          <mat-error>
+            {{ formErrors['email'] }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput
+                 spellcheck="false"
+                 placeholder="Login"
+                 formControlName="username">
+          <mat-hint>
+            Login allowed characters are letters and numbers only. No spaces.
+          </mat-hint>
+          <mat-error>
+            {{ formErrors['username'] }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput
+                 spellcheck="false"
+                 placeholder="Name"
+                 formControlName="name">
+          <mat-hint>
+            Login allowed characters are letters and numbers only. No spaces.
+          </mat-hint>
+          <mat-error>
+            {{ formErrors['name'] }}
+          </mat-error>
+        </mat-form-field>
+
+        <div formGroupName="passwordsGroup"
+             class="form-form" fxLayoutAlign="stretch" fxLayout="column">
+
+          <mat-form-field>
+            <input [type]="hidePassword ? 'password' : 'text'"
+                   matInput
+                   spellcheck="false"
+                   placeholder="Password"
+                   formControlName="password">
+            <button mat-icon-button
+                    tabindex="-1"
+                    matSuffix
+                    (click)="hidePassword = !hidePassword"
+                    [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hidePassword">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-hint>
+              Minimum length 6, one letter, one number, one special character.
+            </mat-hint>
+            <mat-error id="specialMatError">
+              {{ formErrors['password'] }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input [type]="hidePassword ? 'password' : 'text'"
+                   matInput
+                   spellcheck="false"
+                   placeholder="Confirm Password"
+                   [errorStateMatcher]="errorMatcher"
+                   formControlName="confirmPassword">
+            <button mat-icon-button
+                    tabindex="-1"
+                    matSuffix
+                    (click)="hidePassword = !hidePassword"
+                    [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hidePassword">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-hint>
+              Minimum length 6, one letter, one number, one special character.
+            </mat-hint>
+            <mat-error>
+              {{ formErrors['confirmPassword'] ? formErrors['confirmPassword'] : formErrors['passwordsGroup'] }}
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+
+            <button mat-raised-button
+                    [disabled]="!form.valid"
+                    (click)="signup(form.value);"
+                    color="primary">Register
+            </button>
+      </form>
+    </mat-card>
+  </div>
+</div>
