@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kosmala.springbootapp.entity.DetailedUserInfo;
 import com.kosmala.springbootapp.entity.GenderName;
 import com.kosmala.springbootapp.entity.User;
+import com.kosmala.springbootapp.exception.ResourceNotFoundException;
 import com.kosmala.springbootapp.payload.DetailedUserInfoRequest;
 import com.kosmala.springbootapp.repository.DetailedUserInfoRepository;
 import com.kosmala.springbootapp.repository.UserRepository;
@@ -48,9 +49,18 @@ public class UsersController
     @GetMapping("/getDetails")
     public ResponseEntity getDetails(@AuthenticationPrincipal UserPrincipal currentUser)
     {
-        return ResponseEntity.ok(currentUser.getDetailedUserInfo());
+        User user = userRepository.findByUsername(currentUser.getUsername()).orElse(null);
+        return ResponseEntity.ok(user.getDetailedUserInfo());
     }
 
+    @GetMapping("/users/{username}")
+    public ResponseEntity getUserProfile(@PathVariable(value = "username") String username)
+    {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        return ResponseEntity.ok(user.getDetailedUserInfo());
+    }
 
     private DetailedUserInfo detailedUserInfoRequestToDetailedUserInfo(DetailedUserInfoRequest detailedUserInfoRequest)
     {

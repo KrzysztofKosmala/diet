@@ -40,10 +40,11 @@ export class LoginComponent extends FormComponentBase implements OnInit, AfterVi
     this.authService.login(credentials)
       .subscribe(data =>
         {
+          this.invalidLogin = false;
           localStorage.setItem('TOKEN', data.accessToken);
           this.router.navigate(['/user']);
         }
-        ,(error:HttpErrorResponse) => {
+        ,(error) => {
           this.invalidLogin = true;
         }
       )

@@ -33,3 +33,12 @@
 .spacer {
   flex: 1 1 auto;
 }
+.bg{
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: url('src/assets/img/cwiczacaBaba.jpg');
+  background-size: cover;
+  min-width: 100%;
+  min-height: 100%;
+}

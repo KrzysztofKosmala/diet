@@ -30,7 +30,6 @@ public class UserPrincipal implements UserDetails
     @JsonIgnore
     private String password;
 
-    private DetailedUserInfo detailedUserInfo;
 
     private Collection<? extends GrantedAuthority> authorities;
 

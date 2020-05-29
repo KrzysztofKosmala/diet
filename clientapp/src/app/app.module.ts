@@ -48,8 +48,9 @@ import { UserComponent } from './user/user.component';
     RouterModule.forRoot([
       { path: '', component: HomeComponent },
       { path: 'login', component: LoginComponent },
+      { path: 'logout', component: LoginComponent },
       { path: 'signup', component: SignupComponent },
-      { path: 'user', component: SignupComponent },
+      { path: 'user', component: UserComponent },
     ]),
     BrowserAnimationsModule,
     MatCheckboxModule,
