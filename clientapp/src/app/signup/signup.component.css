@@ -20,23 +20,20 @@
 {
   height: 28%;
 }
-.child-div
-{
-  padding-top: 10%;
-  padding-right: 17%;
-  padding-left: 58%;
-  height: 100%;
-}
+
 
 .spacer {
   flex: 1 1 auto;
 }
 .bg{
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: url('src/assets/img/cwiczacaBaba.jpg');
+
+  background: url('../../assets/img/cwiczacaBaba.jpg') no-repeat ;
   background-size: cover;
-  min-width: 100%;
-  min-height: 100%;
+
+}
+.child-div
+{
+  padding-top: 10%;
+  padding-right: 17%;
+  padding-left: 60%;
 }

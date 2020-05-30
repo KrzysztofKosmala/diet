@@ -1,5 +1,9 @@
 
-<mat-toolbar class="bg-dark white-text">{{currentUserName}}
-  <span class="spacer"></span>
-  <mat-icon class="icon" aria-hidden="false" aria-label="Example user verified icon" [routerLink]="['']">keyboard_backspace</mat-icon>
-</mat-toolbar>
+<div id="logInfo" class="bg-dark white-text" fxLayoutAlign="center center" fxLayout="row">
+  Logged as: {{currentUserName}}  |
+  <button mat-button
+
+          (click)="logout()"
+          color="primary">Logout
+  </button>
+</div>

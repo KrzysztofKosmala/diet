@@ -22,23 +22,22 @@
   height: 28%;
 
 }
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.bg{
+
+  background: url('../../assets/img/cwiczacaBaba.jpg') no-repeat ;
+  background-size: cover;
+
+}
 .child-div
 {
   padding-top: 10%;
   padding-right: 17%;
   padding-left: 60%;
-  height: 100%;
-}
 
-.spacer {
-  flex: 1 1 auto;
-}
-.bg{
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: url('src/assets/img/cwiczacaBaba.jpg');
-  background-size: cover;
-  min-width: 100%;
-  min-height: 100%;
+
 }
