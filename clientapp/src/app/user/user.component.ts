@@ -12,6 +12,8 @@ export class UserComponent implements OnInit {
 
   currentUserName = this.authService.currentUser.name;
 
+  clicked = false;
+
   constructor(
     private router: Router,
     private authService: AuthService) { }
@@ -19,6 +21,10 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  isClicked()
+  {
+      this.clicked = !this.clicked;
+  }
   logout()
   {
     this.authService.logout();

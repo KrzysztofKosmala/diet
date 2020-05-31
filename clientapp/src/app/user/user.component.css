@@ -3,3 +3,34 @@
   padding: 0px;
   margin: 0;
 }
+mat-sidenav {
+  width: 20%;
+  padding:5px;
+  height: 100%;
+  text-align: center;
+  border-right: groove;
+}
+.mat-sidenav-container
+{
+
+
+}
+.mat-sidenav-content
+{
+  text-align: center;
+  width: auto;
+  height: 100%;
+
+
+
+}
+.mat-drawer {
+
+}
+
+.main-content {
+
+}
+.spacer {
+  flex-grow: 0.76;
+}

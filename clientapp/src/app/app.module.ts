@@ -26,6 +26,13 @@ import { WavesModule, ButtonsModule, IconsModule } from 'angular-bootstrap-md'
 import {InterceptorService} from "./service/interceptor.service";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import { UserComponent } from './user/user.component';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { UserDetailInfoComponent } from './user-detail-info/user-detail-info.component';
+import {MatListModule} from "@angular/material/list";
+import {MatMenuModule} from "@angular/material/menu";
+
+
+
 
 @NgModule({
   declarations: [
@@ -36,6 +43,8 @@ import { UserComponent } from './user/user.component';
     HeaderComponent,
     FooterComponent,
     UserComponent,
+    UserDetailInfoComponent,
+
 
 
   ],
@@ -45,13 +54,8 @@ import { UserComponent } from './user/user.component';
     FormsModule,
     HttpModule,
     MDBBootstrapModule.forRoot(),
-    RouterModule.forRoot([
-      { path: '', component: HomeComponent },
-      { path: 'login', component: LoginComponent },
-      { path: 'logout', component: LoginComponent },
-      { path: 'signup', component: SignupComponent },
-      { path: 'user', component: UserComponent },
-    ]),
+    RouterModule.forRoot([]),
+
     BrowserAnimationsModule,
     MatCheckboxModule,
     FlexLayoutModule,
@@ -65,7 +69,9 @@ import { UserComponent } from './user/user.component';
     ButtonsModule,
     IconsModule,
     ReactiveFormsModule,
-
+    MatSidenavModule,
+    MatListModule,
+    MatMenuModule
 
   ],
   providers: [AuthService,
