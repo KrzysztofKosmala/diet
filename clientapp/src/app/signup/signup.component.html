@@ -69,9 +69,7 @@
                     [attr.aria-pressed]="hidePassword">
               <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
-            <mat-hint>
-              Minimum length 6, one letter, one number, one special character.
-            </mat-hint>
+
             <mat-error id="specialMatError">
               {{ formErrors['password'] }}
             </mat-error>
@@ -92,9 +90,7 @@
                     [attr.aria-pressed]="hidePassword">
               <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
-            <mat-hint>
-              Minimum length 6, one letter, one number, one special character.
-            </mat-hint>
+
             <mat-error>
               {{ formErrors['confirmPassword'] ? formErrors['confirmPassword'] : formErrors['passwordsGroup'] }}
             </mat-error>

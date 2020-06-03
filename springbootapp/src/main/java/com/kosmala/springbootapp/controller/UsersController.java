@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/api/users")
 public class UsersController
@@ -48,11 +49,22 @@ public class UsersController
         return ResponseEntity.ok(objectMapper.writeValueAsString(userRepository.findByUsernameOrEmail(currentUser.getEmail(),currentUser.getEmail())));
     }
 
-    @GetMapping("/getDetails")
+    @GetMapping("/details")
     public ResponseEntity getDetails(@AuthenticationPrincipal UserPrincipal currentUser)
     {
-        User user = userRepository.findByUsername(currentUser.getUsername()).orElse(null);
+        User user = userRepository.findByUsername(currentUser.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", currentUser.getUsername()));
+
+        if(user.getDetailedUserInfo() == null)
+            return new ResponseEntity(new CustomResponse(false, "User doesnt have detail info!"),
+                    HttpStatus.BAD_REQUEST);
         return ResponseEntity.ok(user.getDetailedUserInfo());
+    }
+
+    @GetMapping("/ni")
+    public void ni()
+    {
+        System.out.println("console");
     }
 
     @GetMapping("/users/{username}")

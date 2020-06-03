@@ -25,6 +25,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { WavesModule, ButtonsModule, IconsModule } from 'angular-bootstrap-md'
 import {InterceptorService} from "./service/interceptor.service";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
+import {HttpClientModule} from "@angular/common/http";
 import { UserComponent } from './user/user.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import { UserDetailInfoComponent } from './user-detail-info/user-detail-info.component';
@@ -71,7 +72,8 @@ import {MatMenuModule} from "@angular/material/menu";
     ReactiveFormsModule,
     MatSidenavModule,
     MatListModule,
-    MatMenuModule
+    MatMenuModule,
+    HttpClientModule
 
   ],
   providers: [AuthService,

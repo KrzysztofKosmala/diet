@@ -48,15 +48,15 @@ export class SignupComponent extends FormComponentBase implements OnInit, AfterV
       },
       password: {
         required: 'Password is required.',
-        minlength: 'Password minimum length is 6.',
+
         maxlength: 'Password maximum length is 15.',
-        pattern: 'Minimum length 6, requires one letter, one number, one special character, no spaces.'
+
       },
       confirmPassword: {
         required: 'Confirm password is required.',
-        minlength: 'Confirm password minimum length is 6.',
+
         maxlength: 'Confirm password maximum length is 15.',
-        pattern: 'Minimum length 6, requires one letter, one number, one special character, no spaces.',
+
         passwordsDoNotMatch: 'Passwords must match.'
       },
       email: {
@@ -118,12 +118,12 @@ export class SignupComponent extends FormComponentBase implements OnInit, AfterV
       passwordsGroup: this.formBuilder.group({
         password: ['', [
           Validators.required,
-          Validators.maxLength(15),
-          Validators.pattern('^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$')]],
+          Validators.maxLength(15)
+          ]],
         confirmPassword: ['', [
           Validators.required,
-          Validators.maxLength(15),
-          Validators.pattern('^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$')]],
+          Validators.maxLength(15)
+          ]],
       }, { validators: passwordsDoNotMatch })
     });
   }
