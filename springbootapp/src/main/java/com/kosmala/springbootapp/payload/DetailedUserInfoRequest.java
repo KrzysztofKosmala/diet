@@ -15,9 +15,13 @@ public class DetailedUserInfoRequest
 
     private int amount_of_meals;
 
-    private int caloric_intake;
+/*    private int caloric_intake;*/
 
     private int weight;
 
     private int age;
+
+    private int height;
+
+    private String goal;
 }

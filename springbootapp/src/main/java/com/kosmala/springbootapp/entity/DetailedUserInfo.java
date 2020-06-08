@@ -31,4 +31,9 @@ public class DetailedUserInfo
 
     private int age;
 
+    private int height;
+
+    @Enumerated(EnumType.STRING)
+    private GoalName goal;
+
 }

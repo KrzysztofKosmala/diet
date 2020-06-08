@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {Http} from "@angular/http";
 import {map} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {UserDetails} from "../payload/user-details";
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +15,16 @@ export class UserDetailInfoServiceService {
 
   }
   BASE_URL = 'http://localhost:8080/api/users';
-  getDetails()
+
+  getDetails(): Observable<UserDetails>
   {
-    return this.http.get(this.BASE_URL+'/details').toPromise()
-
+    return this.http.get<UserDetails>(this.BASE_URL+'/details');
   }
 
-  ni() {
-
-   return   this.http.get(this.BASE_URL + '/ni', {}).toPromise()
-
+  setDetails(details)
+  {
+    return this.http.post(this.BASE_URL+"/details", details);
   }
+
+
 }

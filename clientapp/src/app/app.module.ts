@@ -31,7 +31,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import { UserDetailInfoComponent } from './user-detail-info/user-detail-info.component';
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
-
+import {UserDetailInfoServiceService} from "./service/user-detail-info-service.service";
+import {MatSelectModule} from '@angular/material/select';
 
 
 
@@ -73,15 +74,17 @@ import {MatMenuModule} from "@angular/material/menu";
     MatSidenavModule,
     MatListModule,
     MatMenuModule,
-    HttpClientModule
-
+    HttpClientModule,
+    MatSelectModule
   ],
   providers: [AuthService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: InterceptorService,
       multi: true
-    }],
+    },
+    UserDetailInfoServiceService
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,1 +1,122 @@
 
+<div *ngIf="!hasDetailInfo; else userHasDetails">
+
+  <div class="alert alert-danger">
+    {{errMes}}
+  </div>
+  <div>
+
+    <form class="form-form" [formGroup]="form"  fxLayout="row" fxLayoutAlign="space-around center">
+      <mat-form-field appearance="fill">
+        <mat-label >Gender</mat-label>
+        <mat-select formControlName="gender">
+          <mat-option value="MALE">Male</mat-option>
+          <mat-option value="FEMALE">Female</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance="fill">
+        <mat-label >Amount of meals</mat-label>
+        <mat-select formControlName="amount_of_meals">
+          <mat-option value="3">3</mat-option>
+          <mat-option value="4">4</mat-option>
+          <mat-option value="5">5</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance="fill">
+        <mat-label >Age</mat-label>
+        <input matInput formControlName="age">
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance="fill">
+        <mat-label >Weight</mat-label>
+        <input matInput formControlName="weight">
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance="fill">
+        <mat-label >Height</mat-label>
+        <input matInput formControlName="height">
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance="fill">
+        <mat-label >Goal</mat-label>
+        <mat-select formControlName="goal">
+          <mat-option value="BULK">Bulk</mat-option>
+          <mat-option value="CUT">Cut</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </form>
+    <button mat-raised-button
+
+            (click)="setDetail(form.value);"
+            color="primary">Set detail info
+    </button>
+
+  </div>
+</div>
+<ng-template #userHasDetails>
+<div >
+<!--  <div class="form-group">
+    <input ppearance="fill" type="text" [value]="details.gender" class="form-control form-control-rounded" >
+  </div>-->
+    <div style="margin: 10px">
+    Your current detail info
+  </div>
+  <form class="form-form" [formGroup]="form"  fxLayout="row" fxLayoutAlign="space-around center">
+    <mat-form-field appearance="fill">
+      <mat-label >Gender</mat-label>
+      <mat-select formControlName="gender" [(ngModel)]="details.gender" >
+        <mat-option *ngFor="let gender of genders" [value]="gender">{{gender}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <br>
+
+    <mat-form-field appearance="fill">
+      <mat-label >Amount of meals</mat-label>
+      <mat-select formControlName="amount_of_meals" [(ngModel)]="details.amount_of_meals" >
+        <mat-option *ngFor="let amount of amountOfMeals" [value]="amount">{{amount}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label >Age</mat-label>
+      <input matInput formControlName="age" [(ngModel)]="details.age">
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label >Weight</mat-label>
+      <input matInput formControlName="weight" [(ngModel)]="details.weight">
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label >Height</mat-label>
+      <input matInput formControlName="height" [(ngModel)]="details.height">
+    </mat-form-field>
+    <br>
+
+
+    <mat-form-field appearance="fill">
+      <mat-label >Goal</mat-label>
+      <mat-select formControlName="goal" [(ngModel)]="details.goal" >
+        <mat-option *ngFor="let goal of goals" [value]="goal">{{goal}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+
+  </form>
+  <button mat-raised-button
+
+          (click)="updeteDetails(form.value);"
+          color="primary">Update your detail info
+  </button>
+
+
+
+</div>
+
+</ng-template>

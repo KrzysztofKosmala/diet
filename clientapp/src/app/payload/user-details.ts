@@ -5,4 +5,6 @@ export class UserDetails
       caloric_intake: number;
       weight: number;
       age: number;
+      height: number;
+      goal: String;
 }
