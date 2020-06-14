@@ -1,55 +1,13 @@
-<!--
-<mat-sidenav-container fxFill>
-  <mat-sidenav  mode="side" #sidenav opened position="start"  >
-    <mat-nav-list fxLayout="column" fxLayoutAlign="space-evenly none">
-
-      <a mat-list-item routerLink="/user/details"> Your detailed information </a>
-      <a mat-list-item [routerLink]="'/create-account'"> Create Account </a>
-      <a mat-list-item [routerLink]="'/contacts'"> Contacts </a>
-      <a mat-list-item [routerLink]="'/create-contact'"> Create Contact </a>
-      <a mat-list-item [routerLink]="'/activities'"> Activities </a>
-      <a mat-list-item [routerLink]="'/create-activity'"> Create Activity </a>
-
-
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content  fxLayout="row" class="footer-copyright" >
-
-    <mat-toolbar>
-
-          <div class="spacer" style="flex: 0.77 ;" ></div>
-
-          <button mat-button color="dark" >
-           Logged as: {{currentUserName}}
-          </button>
-          <button mat-button
-
-                  (click)="logout()"
-                  color="dark">Logout
-          </button>
-    </mat-toolbar>
-
-
-
-  </mat-sidenav-content>
-  <div class="main-content">
-    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-  </div>
-
-  <router-outlet></router-outlet>
-
-</mat-sidenav-container>-->
-
 <mat-sidenav-container fxFill>
   <mat-sidenav mode="side" #sidenav opened position="start">
     <mat-nav-list fxLayout="column" fxLayoutAlign="space-evenly none">
 
-      <a mat-list-item routerLink="/user/details"> Your detailed information </a>
-      <a mat-list-item [routerLink]="'/create-account'"> Create Account </a>
-      <a mat-list-item [routerLink]="'/contacts'"> Contacts </a>
-      <a mat-list-item [routerLink]="'/create-contact'"> Create Contact </a>
-      <a mat-list-item [routerLink]="'/activities'"> Activities </a>
-      <a mat-list-item [routerLink]="'/create-activity'"> Create Activity </a>
+      <a mat-list-item routerLink="/user/details"> Detailed information </a>
+      <a mat-list-item [routerLink]="'/create-account'"> Daily </a>
+      <a mat-list-item [routerLink]="'/contacts'"> Create recipe </a>
+      <a mat-list-item [routerLink]="'/contacts'"> Create product </a>
+      <a mat-list-item [routerLink]="'/create-contact'"> Shopping list </a>
+
 
 
     </mat-nav-list>

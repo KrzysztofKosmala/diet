@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -42,14 +43,39 @@ public class UsersController
         DetailedUserInfo detailedUserInfo = detailedUserInfoRequestToDetailedUserInfo(userDetailsRequest);
 
         //COUNT CALORIC INTAKE
-
+        detailedUserInfo.setCaloric_intake(0);
         detailedUserInfoRepository.save(detailedUserInfo);
 
+        assert user != null;
         user.setDetailedUserInfo(detailedUserInfo);
 
         userRepository.save(user);
 
         return ResponseEntity.ok(new CustomResponse(true, "Added user details successfully"));
+    }
+
+    @PostMapping("/updateDetails")
+    public ResponseEntity updateUd(@AuthenticationPrincipal UserPrincipal currentUser, @RequestBody DetailedUserInfoRequest userDetailsRequest) throws JsonProcessingException
+    {
+
+        User user = userRepository.findByUsername(currentUser.getUsername()).orElse(null);
+
+        DetailedUserInfo detailedUserInfoTuUpdate = detailedUserInfoRepository.getOne(user.getDetailedUserInfo().getId());
+
+
+        detailedUserInfoTuUpdate.setAge(userDetailsRequest.getAge());
+        detailedUserInfoTuUpdate.setAmount_of_meals(userDetailsRequest.getAmount_of_meals());
+        detailedUserInfoTuUpdate.setCaloric_intake(userDetailsRequest.getCaloric_intake());
+        detailedUserInfoTuUpdate.setGender(GenderName.valueOf(userDetailsRequest.getGender()));
+        detailedUserInfoTuUpdate.setWeight(userDetailsRequest.getWeight());
+        detailedUserInfoTuUpdate.setHeight(userDetailsRequest.getHeight());
+        detailedUserInfoTuUpdate.setActivity(userDetailsRequest.getActivity());
+        detailedUserInfoTuUpdate.setGoal(GoalName.valueOf(userDetailsRequest.getGoal()));
+
+
+        detailedUserInfoRepository.save(detailedUserInfoTuUpdate);
+
+        return ResponseEntity.ok(new CustomResponse(true, "User detail info has been updated successfully"));
     }
 
     @GetMapping("/details")
@@ -73,6 +99,7 @@ public class UsersController
         detailedUserInfo.setGender(GenderName.valueOf(detailedUserInfoRequest.getGender()));
         detailedUserInfo.setWeight(detailedUserInfoRequest.getWeight());
         detailedUserInfo.setHeight(detailedUserInfoRequest.getHeight());
+        detailedUserInfo.setActivity(detailedUserInfoRequest.getActivity());
         detailedUserInfo.setGoal(GoalName.valueOf(detailedUserInfoRequest.getGoal()));
 
         return detailedUserInfo;

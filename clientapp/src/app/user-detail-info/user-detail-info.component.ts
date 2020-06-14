@@ -46,12 +46,22 @@ export class  UserDetailInfoComponent implements OnInit {
     age : new FormControl(),
     height : new FormControl(),
     goal : new FormControl(),
+    activity : new FormControl(),
+    caloric_intake : new FormControl(),
 
 });
   detailsControl = new FormControl();
   genders = ['MALE', 'FEMALE'];
   amountOfMeals = [3,4,5];
   goals = ['BULK', 'CUT'];
+  myMap = new Map();
+
+  activities = new Map(
+           [["1.2", "1.2 - Lack of Activity"],
+                  ["1.3", "1.3 - low activity (sedentary work and 1-2 workouts per week)"],
+                  ["1.6", "1.6 - average activity (sedentary work and training 3-4 times a week)"],
+                  ["1.8", "1.8 - high activity (physical work and 3-4 workouts per week)"],
+                  ["2.2", "2.2 - very high activity (professional athletes, people who train every day)"]]);
 
   ngOnInit(): void {
     this.getDetails();
@@ -65,6 +75,8 @@ export class  UserDetailInfoComponent implements OnInit {
         weight: details.weight,
         age: details.age,
         height: details.height,
+        activity: details.activity,
+        caloric_intake: details.caloric_intake,
         goal: details.goal
 
       };
@@ -73,7 +85,7 @@ export class  UserDetailInfoComponent implements OnInit {
         {
           this.hasDetailInfo=true;
           console.log(data);
-          this.router.navigate(['/user/details']).then(r => console.log(r));
+          this.router.navigate(['/user']).then(r => console.log(r));
 
         })
       .catch(error =>
@@ -86,7 +98,32 @@ export class  UserDetailInfoComponent implements OnInit {
 
   updeteDetails(newDetails) {
 
-    console.log(newDetails);
+    /*for now*/
+    var json =
+      {
+        gender: newDetails.gender,
+        amount_of_meals: newDetails.amount_of_meals,
+        caloric_intake: newDetails.caloric_intake,
+        weight: newDetails.weight,
+        age: newDetails.age,
+        height: newDetails.height,
+        activity: newDetails.activity,
+        goal: newDetails.goal
 
+      };
+    this.infoService.updateDetails(json)
+      .toPromise().then(data =>
+    {
+      this.hasDetailInfo=true;
+      console.log(data);
+      this.router.navigate(['/user']).then(r => console.log(r));
+
+    })
+      .catch(error =>
+        {
+
+          console.log(error)
+        }
+      )
   }
 }

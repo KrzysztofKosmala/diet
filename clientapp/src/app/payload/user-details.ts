@@ -6,5 +6,6 @@ export class UserDetails
       weight: number;
       age: number;
       height: number;
+      activity: number;
       goal: String;
 }

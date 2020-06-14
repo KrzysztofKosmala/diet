@@ -26,5 +26,9 @@ export class UserDetailInfoServiceService {
     return this.http.post(this.BASE_URL+"/details", details);
   }
 
+  updateDetails(details)
+  {
+    return this.http.post(this.BASE_URL+"/updateDetails", details);
+  }
 
 }

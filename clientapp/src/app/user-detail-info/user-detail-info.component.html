@@ -39,6 +39,18 @@
         <input matInput formControlName="height">
       </mat-form-field>
       <br>
+
+      <mat-form-field appearance="fill">
+        <mat-label >Activity</mat-label>
+        <mat-select formControlName="activity">
+          <mat-option value="1.2">1.2 - Lack of Activity</mat-option>
+          <mat-option value="1.3">1.3 - low activity (sedentary work and 1-2 workouts per week)</mat-option>
+          <mat-option value="1.6">1.6 - average activity (sedentary work and training 3-4 times a week)</mat-option>
+          <mat-option value="1.8">1.8 - high activity (physical work and 3-4 workouts per week)</mat-option>
+          <mat-option value="2.2">2.2 - very high activity (professional athletes, people who train every day)</mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <mat-form-field appearance="fill">
         <mat-label >Goal</mat-label>
         <mat-select formControlName="goal">
@@ -98,6 +110,18 @@
     </mat-form-field>
     <br>
 
+    <mat-form-field appearance="fill">
+      <mat-label >Caloric intake</mat-label>
+      <input matInput formControlName="caloric_intake" [(ngModel)]="details.caloric_intake">
+    </mat-form-field>
+    <br>
+
+    <mat-form-field appearance="fill">
+      <mat-label >Activity</mat-label>
+      <mat-select formControlName="activity" [(ngModel)]="details.activity" >
+        <mat-option *ngFor="let item of activities | keyvalue" [value]="item.key">{{item.value}}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label >Goal</mat-label>
