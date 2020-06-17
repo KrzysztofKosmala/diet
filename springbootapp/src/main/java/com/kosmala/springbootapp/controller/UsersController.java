@@ -8,6 +8,9 @@ import com.kosmala.springbootapp.entity.GenderName;
 import com.kosmala.springbootapp.entity.GoalName;
 import com.kosmala.springbootapp.entity.User;
 import com.kosmala.springbootapp.exception.ResourceNotFoundException;
+import com.kosmala.springbootapp.helpers.countCaloricIntake.ICaloricIntake;
+import com.kosmala.springbootapp.helpers.countCaloricIntake.IMacroRatio;
+import com.kosmala.springbootapp.helpers.countCaloricIntake.Ratio;
 import com.kosmala.springbootapp.payload.CustomResponse;
 import com.kosmala.springbootapp.payload.DetailedUserInfoRequest;
 import com.kosmala.springbootapp.repository.DetailedUserInfoRepository;
@@ -17,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -32,18 +34,37 @@ public class UsersController
     ObjectMapper objectMapper;
 
     @Autowired
+    ICaloricIntake countCaloricIntake;
+
+    @Autowired
+    IMacroRatio countMacroRatio;
+
+    @Autowired
     DetailedUserInfoRepository detailedUserInfoRepository;
 
     @PostMapping("/details")
     public ResponseEntity attachUd(@AuthenticationPrincipal UserPrincipal currentUser, @RequestBody DetailedUserInfoRequest userDetailsRequest) throws JsonProcessingException
     {
-
+        //find user in db
         User user = userRepository.findByUsername(currentUser.getUsername()).orElse(null);
 
+        //convert req class to detail user info
         DetailedUserInfo detailedUserInfo = detailedUserInfoRequestToDetailedUserInfo(userDetailsRequest);
 
-        //COUNT CALORIC INTAKE
-        detailedUserInfo.setCaloric_intake(0);
+        //count caloric intake
+        int caloricIntake = countCaloricIntake.count(detailedUserInfo);
+
+        //set caloric intake
+        detailedUserInfo.setCaloric_intake(caloricIntake);
+
+        //count ratio
+        Ratio ratio = countMacroRatio.countRatio(detailedUserInfo.getGender(), caloricIntake, detailedUserInfo.getWeight());
+
+        //set BTW
+        detailedUserInfo.setProtein(ratio.getProtein());
+        detailedUserInfo.setFat(ratio.getFat());
+        detailedUserInfo.setCarbo(ratio.getCarbo());
+
         detailedUserInfoRepository.save(detailedUserInfo);
 
         assert user != null;
@@ -60,12 +81,22 @@ public class UsersController
 
         User user = userRepository.findByUsername(currentUser.getUsername()).orElse(null);
 
+        assert user != null;
         DetailedUserInfo detailedUserInfoTuUpdate = detailedUserInfoRepository.getOne(user.getDetailedUserInfo().getId());
 
 
         detailedUserInfoTuUpdate.setAge(userDetailsRequest.getAge());
         detailedUserInfoTuUpdate.setAmount_of_meals(userDetailsRequest.getAmount_of_meals());
+
+        if(userDetailsRequest.getCaloric_intake() != detailedUserInfoTuUpdate.getCaloric_intake()
+                && checkIfMacroEqualsKcal(userDetailsRequest.getCaloric_intake(), userDetailsRequest.getProtein(), userDetailsRequest.getFat(), userDetailsRequest.getCarbo()))
+            return new ResponseEntity(new CustomResponse(false, "Please check if sum of macro equals with new caloric intake!"),
+                    HttpStatus.BAD_REQUEST);
+
         detailedUserInfoTuUpdate.setCaloric_intake(userDetailsRequest.getCaloric_intake());
+        detailedUserInfoTuUpdate.setProtein(userDetailsRequest.getProtein());
+        detailedUserInfoTuUpdate.setFat(userDetailsRequest.getFat());
+        detailedUserInfoTuUpdate.setCarbo(userDetailsRequest.getCarbo());
         detailedUserInfoTuUpdate.setGender(GenderName.valueOf(userDetailsRequest.getGender()));
         detailedUserInfoTuUpdate.setWeight(userDetailsRequest.getWeight());
         detailedUserInfoTuUpdate.setHeight(userDetailsRequest.getHeight());
@@ -103,5 +134,10 @@ public class UsersController
         detailedUserInfo.setGoal(GoalName.valueOf(detailedUserInfoRequest.getGoal()));
 
         return detailedUserInfo;
+    }
+
+    private boolean checkIfMacroEqualsKcal(int caloricIntake, int protein, int fat, int carbo)
+    {
+        return caloricIntake == protein*4 + fat*9 + carbo*4;
     }
 }

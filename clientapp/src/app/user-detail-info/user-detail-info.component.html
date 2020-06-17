@@ -76,7 +76,8 @@
     <div style="margin: 10px">
     Your current detail info
   </div>
-  <form class="form-form" [formGroup]="form"  fxLayout="row" fxLayoutAlign="space-around center">
+  <form class="form-form" [formGroup]="form"  >
+    <div fxLayout="row" fxLayoutAlign="space-evenly center">
     <mat-form-field appearance="fill">
       <mat-label >Gender</mat-label>
       <mat-select formControlName="gender" [(ngModel)]="details.gender" >
@@ -84,7 +85,6 @@
       </mat-select>
     </mat-form-field>
 
-    <br>
 
     <mat-form-field appearance="fill">
       <mat-label >Amount of meals</mat-label>
@@ -93,34 +93,28 @@
       </mat-select>
     </mat-form-field>
 
-    <br>
     <mat-form-field appearance="fill">
       <mat-label >Age</mat-label>
       <input matInput formControlName="age" [(ngModel)]="details.age">
     </mat-form-field>
-    <br>
+
     <mat-form-field appearance="fill">
       <mat-label >Weight</mat-label>
       <input matInput formControlName="weight" [(ngModel)]="details.weight">
     </mat-form-field>
-    <br>
+
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="space-evenly center">
     <mat-form-field appearance="fill">
       <mat-label >Height</mat-label>
       <input matInput formControlName="height" [(ngModel)]="details.height">
     </mat-form-field>
-    <br>
+
 
     <mat-form-field appearance="fill">
       <mat-label >Caloric intake</mat-label>
       <input matInput formControlName="caloric_intake" [(ngModel)]="details.caloric_intake">
-    </mat-form-field>
-    <br>
-
-    <mat-form-field appearance="fill">
-      <mat-label >Activity</mat-label>
-      <mat-select formControlName="activity" [(ngModel)]="details.activity" >
-        <mat-option *ngFor="let item of activities | keyvalue" [value]="item.key">{{item.value}}</mat-option>
-      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -129,6 +123,32 @@
         <mat-option *ngFor="let goal of goals" [value]="goal">{{goal}}</mat-option>
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label >Activity</mat-label>
+      <mat-select formControlName="activity" [(ngModel)]="details.activity" >
+        <mat-option *ngFor="let item of activities | keyvalue" [value]="item.key">{{item.value}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+</div>
+    <div fxLayout="row" fxLayoutAlign="space-evenly center">
+      <mat-form-field appearance="fill">
+        <mat-label >Protein</mat-label>
+        <input matInput formControlName="protein" [(ngModel)]="details.protein">
+      </mat-form-field>
+
+
+      <mat-form-field appearance="fill">
+        <mat-label >Fat</mat-label>
+        <input matInput formControlName="fat" [(ngModel)]="details.fat">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label >Carbo</mat-label>
+        <input matInput formControlName="carbo" [(ngModel)]="details.carbo">
+      </mat-form-field>
+    </div>
+
 
 
 

@@ -7,5 +7,8 @@ export class UserDetails
       age: number;
       height: number;
       activity: number;
+      protein: number;
+      fat: number;
+      carbo: number;
       goal: String;
 }

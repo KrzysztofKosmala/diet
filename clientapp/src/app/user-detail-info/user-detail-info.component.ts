@@ -48,6 +48,9 @@ export class  UserDetailInfoComponent implements OnInit {
     goal : new FormControl(),
     activity : new FormControl(),
     caloric_intake : new FormControl(),
+    protein : new FormControl(),
+    fat : new FormControl(),
+    carbo : new FormControl(),
 
 });
   detailsControl = new FormControl();
@@ -61,7 +64,7 @@ export class  UserDetailInfoComponent implements OnInit {
                   ["1.3", "1.3 - low activity (sedentary work and 1-2 workouts per week)"],
                   ["1.6", "1.6 - average activity (sedentary work and training 3-4 times a week)"],
                   ["1.8", "1.8 - high activity (physical work and 3-4 workouts per week)"],
-                  ["2.2", "2.2 - very high activity (professional athletes, people who train every day)"]]);
+                  ["2.0", "2.0 - very high activity (professional athletes, people who train every day)"]]);
 
   ngOnInit(): void {
     this.getDetails();
@@ -108,7 +111,10 @@ export class  UserDetailInfoComponent implements OnInit {
         age: newDetails.age,
         height: newDetails.height,
         activity: newDetails.activity,
-        goal: newDetails.goal
+        goal: newDetails.goal,
+        protein: newDetails.protein,
+        fat: newDetails.fat,
+        carbo: newDetails.carbo
 
       };
     this.infoService.updateDetails(json)
@@ -121,7 +127,7 @@ export class  UserDetailInfoComponent implements OnInit {
     })
       .catch(error =>
         {
-
+          this.router.navigate(['/user']).then(r => console.log(r));
           console.log(error)
         }
       )

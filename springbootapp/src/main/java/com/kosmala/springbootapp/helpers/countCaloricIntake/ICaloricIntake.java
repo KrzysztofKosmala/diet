@@ -2,7 +2,7 @@ package com.kosmala.springbootapp.helpers.countCaloricIntake;
 
 import com.kosmala.springbootapp.entity.DetailedUserInfo;
 
-public interface ICountCaloricIntake
+public interface ICaloricIntake
 {
-    int count(DetailedUserInfo detailedUserInfo);
+    public int count(DetailedUserInfo detailedUserInfo);
 }

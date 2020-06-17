@@ -23,6 +23,12 @@ public class DetailedUserInfoRequest
 
     private int height;
 
+    private int protein;
+
+    private int fat;
+
+    private int carbo;
+
     private double activity;
 
     private String goal;

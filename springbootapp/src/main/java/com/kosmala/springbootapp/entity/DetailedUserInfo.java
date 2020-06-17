@@ -19,22 +19,17 @@ public class DetailedUserInfo
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Enumerated(EnumType.STRING)
     private GenderName gender;
-
     private int amount_of_meals;
-
     private int caloric_intake;
-
     private int weight;
-
     private int age;
-
     private int height ;
-
     private double activity;
-
+    private int protein;
+    private int fat;
+    private int carbo;
     @Enumerated(EnumType.STRING)
     private GoalName goal;
 
