@@ -57,7 +57,6 @@ export class  UserDetailInfoComponent implements OnInit {
   genders = ['MALE', 'FEMALE'];
   amountOfMeals = [3,4,5];
   goals = ['BULK', 'CUT'];
-  myMap = new Map();
 
   activities = new Map(
            [["1.2", "1.2 - Lack of Activity"],

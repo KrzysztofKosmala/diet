@@ -1,0 +1,53 @@
+<form class="form-form" [formGroup]="form"  fxLayout="row" fxLayoutAlign="space-around center">
+
+  <mat-form-field appearance="fill">
+    <mat-label >Name</mat-label>
+    <input matInput formControlName="name">
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-label >Protein</mat-label>
+    <input matInput formControlName="protein">
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-label >Fat</mat-label>
+    <input matInput formControlName="fat">
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-label >Carbo</mat-label>
+    <input matInput formControlName="carbo">
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-label >Min value</mat-label>
+    <input matInput formControlName="min_value">
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-label >Is divisible</mat-label>
+    <mat-select formControlName="divisible">
+      <mat-option value="true">Yes, it is</mat-option>
+      <mat-option value="false">No, it is not</mat-option>
+    </mat-select>
+  </mat-form-field>
+    <br>
+
+
+
+  <mat-form-field appearance="fill">
+    <mat-label >Metric</mat-label>
+    <mat-select formControlName="metric">
+      <mat-option value="GR">Gram</mat-option>
+      <mat-option value="ML">Milliliter</mat-option>
+      <mat-option value="PC">One pice</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</form>
+<button mat-raised-button
+
+        (click)="createProduct(form.value);"
+        color="primary">Create new product
+</button>

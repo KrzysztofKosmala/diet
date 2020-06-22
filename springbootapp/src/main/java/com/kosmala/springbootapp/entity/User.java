@@ -8,7 +8,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -56,4 +58,8 @@ public class User
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ud_fk", referencedColumnName = "id")
     DetailedUserInfo detailedUserInfo;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<DailyConsumption> dailyConsumption = new LinkedList<>();
+
 }

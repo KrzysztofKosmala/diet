@@ -5,6 +5,7 @@ import {LoginComponent} from "./login/login.component";
 import {SignupComponent} from "./signup/signup.component";
 import {UserComponent} from "./user/user.component";
 import {UserDetailInfoComponent} from "./user-detail-info/user-detail-info.component";
+import {ProductComponent} from "./product/product.component";
 
 
 const routes: Routes = [
@@ -17,7 +18,8 @@ const routes: Routes = [
     component: UserComponent,
     children:
       [
-        {path: 'details' ,component: UserDetailInfoComponent}
+        {path: 'details' ,component: UserDetailInfoComponent},
+        {path: 'product' ,component: ProductComponent}
 
       ]
 }
