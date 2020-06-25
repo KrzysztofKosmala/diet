@@ -11,13 +11,12 @@ import com.kosmala.springbootapp.payload.DetailedUserInfoRequest;
 import com.kosmala.springbootapp.payload.ProductRequest;
 import com.kosmala.springbootapp.repository.ProductRepository;
 import com.kosmala.springbootapp.security.UserPrincipal;
+import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/products")
@@ -29,10 +28,10 @@ public class ProductController
     @PostMapping("/create")
     public ResponseEntity createProduct(@RequestBody ProductRequest productRequest) throws JsonProcessingException
     {
-
-
-       //sprawdzanie jakies
-
+        if(productRepository.existsByName(productRequest.getName())) {
+            return new ResponseEntity(new CustomResponse(false, "This product is already in DB!"),
+                    HttpStatus.BAD_REQUEST);
+        }
         Product product = new Product();
         //
         product.setCarbo(productRequest.getCarbo());
@@ -49,9 +48,16 @@ public class ProductController
         return ResponseEntity.ok(new CustomResponse(true, "Added product successfully"));
     }
 
+    @GetMapping()
+    public ResponseEntity getProductByName(@RequestParam String name)
+    {
+        System.out.println(name);
+        return ResponseEntity.ok(productRepository.findByName(name));
+    }
+
     public double countKcal(double protein, double fat, double carbo)
     {
-        return (4*protein)+(9*fat)+(4*carbo);
+        return DoubleRounder.round((4*protein)+(9*fat)+(4*carbo), 1);
     }
 
 }

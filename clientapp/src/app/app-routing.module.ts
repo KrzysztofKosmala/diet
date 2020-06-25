@@ -6,6 +6,7 @@ import {SignupComponent} from "./signup/signup.component";
 import {UserComponent} from "./user/user.component";
 import {UserDetailInfoComponent} from "./user-detail-info/user-detail-info.component";
 import {ProductComponent} from "./product/product.component";
+import {RecipeComponent} from "./recipe/recipe.component";
 
 
 const routes: Routes = [
@@ -19,7 +20,8 @@ const routes: Routes = [
     children:
       [
         {path: 'details' ,component: UserDetailInfoComponent},
-        {path: 'product' ,component: ProductComponent}
+        {path: 'product' ,component: ProductComponent},
+        {path: 'recipe' ,component: RecipeComponent}
 
       ]
 }

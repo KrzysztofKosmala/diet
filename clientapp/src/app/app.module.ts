@@ -34,6 +34,7 @@ import {MatMenuModule} from "@angular/material/menu";
 import {UserDetailInfoServiceService} from "./service/user-detail-info-service.service";
 import {MatSelectModule} from '@angular/material/select';
 import { ProductComponent } from './product/product.component';
+import { RecipeComponent } from './recipe/recipe.component';
 
 
 
@@ -48,6 +49,7 @@ import { ProductComponent } from './product/product.component';
     UserComponent,
     UserDetailInfoComponent,
     ProductComponent,
+    RecipeComponent,
 
 
 

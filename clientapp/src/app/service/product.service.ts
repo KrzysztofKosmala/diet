@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {Product} from "../payload/Product";
 
 @Injectable({
   providedIn: 'root'
@@ -12,5 +14,12 @@ export class ProductService {
   createProduct(product)
   {
     return this.http.post(this.BASE_URL+"/create", product);
+  }
+
+  getProductByName(name): Observable<Product>
+  {
+    const params = new HttpParams()
+      .set('name', name);
+    return this.http.get<Product>(this.BASE_URL, {params});
   }
 }

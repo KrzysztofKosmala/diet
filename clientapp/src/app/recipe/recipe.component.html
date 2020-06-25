@@ -1,0 +1,11 @@
+<form class="form-form" [formGroup]="form"  fxLayout="row" fxLayoutAlign="space-around center">
+<mat-form-field appearance="fill">
+  <mat-label >Search for product</mat-label>
+  <input matInput formControlName="searchForProduct">
+</mat-form-field>
+</form>
+<button mat-raised-button
+
+        (click)="searchProduct(form.value);"
+        color="primary">Search
+</button>

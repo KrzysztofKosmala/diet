@@ -21,5 +21,7 @@ public class ProductRequest
     private String metric;
 //    private int kcal;
     private boolean divisible;
+    //needed only for recipe
+    private double amount;
 
 }
