@@ -93,6 +93,7 @@ public class UsersController
             return new ResponseEntity(new CustomResponse(false, "Please check if sum of macro equals with new caloric intake!"),
                     HttpStatus.BAD_REQUEST);
 
+        //add checking if counting is needed
         detailedUserInfoTuUpdate.setCaloric_intake(userDetailsRequest.getCaloric_intake());
         detailedUserInfoTuUpdate.setProtein(userDetailsRequest.getProtein());
         detailedUserInfoTuUpdate.setFat(userDetailsRequest.getFat());

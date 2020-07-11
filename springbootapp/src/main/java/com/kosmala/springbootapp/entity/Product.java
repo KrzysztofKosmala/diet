@@ -1,5 +1,6 @@
 package com.kosmala.springbootapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -7,6 +8,8 @@ import lombok.ToString;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "product")
@@ -28,5 +31,11 @@ public class Product
     private Metric metric;
     private double kcal;
     private boolean divisible;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
+    private Set<RecipeProductAmount> recipe = new HashSet<>();
+
+
 
 }

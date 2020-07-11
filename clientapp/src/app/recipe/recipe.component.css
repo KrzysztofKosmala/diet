@@ -1,0 +1,24 @@
+.Recipe{
+  display: inline-block;
+
+
+}
+.container{
+  width: 100%;
+
+
+}
+
+.AddProduct{
+  display: inline-block;
+width: 100%;
+
+}
+
+.mat-form-field {
+  width:80% !important
+}
+.title-center {
+  flex: 1 1 auto;
+  text-align: center;
+}

@@ -8,9 +8,7 @@ import lombok.ToString;
 
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -27,14 +25,13 @@ public class Recipe
     private Long id;
     private String name;
     private String description;
-    private int protein_ratio;
-    private int fat_ratio;
-    private int carbo_ratio;
-    private int kcal;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "recipe_product",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> products = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    private TypeOfRecipe type;
+    private double protein_ratio;
+    private double fat_ratio;
+    private double carbo_ratio;
+    private double kcal;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
+    private Set<RecipeProductAmount> products = new HashSet<>();
 
 }

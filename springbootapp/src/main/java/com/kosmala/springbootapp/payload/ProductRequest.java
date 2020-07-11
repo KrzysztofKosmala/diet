@@ -19,7 +19,7 @@ public class ProductRequest
     private double carbo;
     private double min_value;
     private String metric;
-//    private int kcal;
+    private double kcal;
     private boolean divisible;
     //needed only for recipe
     private double amount;

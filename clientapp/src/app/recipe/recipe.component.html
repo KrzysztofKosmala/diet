@@ -1,11 +1,93 @@
-<form class="form-form" [formGroup]="form"  fxLayout="row" fxLayoutAlign="space-around center">
-<mat-form-field appearance="fill">
-  <mat-label >Search for product</mat-label>
-  <input matInput formControlName="searchForProduct">
-</mat-form-field>
+<div class="container">
+  <div class="Recipe" fxFlex="70%">
+    <mat-toolbar class="bg-transparent black-text" >
+      <span class="title-center">Recipe</span>
+    </mat-toolbar>
+
+    <form class="form-form" [formGroup]="recipeForm" >
+    <div fxLayout="row" fxLayoutAlign="space-around center" >
+      <mat-form-field appearance="fill" >
+        <mat-label >Name</mat-label>
+        <input matInput formControlName="name">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="margin-left: 10px">
+        <mat-label >Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option value="BREAKFAST">Breakfast</mat-option>
+          <mat-option value="DINNER">Dinner</mat-option>
+          <mat-option value="SUPPER">Supper</mat-option>
+          <mat-option value="SNACK">Snack</mat-option>
+          <mat-option value="DESSERT">Dessert</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+      <div fxLayout="column" fxLayoutAlign="space-around center">
+      <mat-form-field appearance="fill" fxFill>
+        <mat-label>Please describe here how to prepare this dish :)</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+      </mat-form-field>
+      <button mat-raised-button
+              (click)="createRecipe(recipeForm.value);"
+              color="primary">Create recipe
+      </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="AddProduct" fxFlex="30%">
+    <mat-toolbar class="bg-transparent black-text" >
+      <span class="title-center">Ingredients</span>
+    </mat-toolbar>
+<div *ngIf="!isMetricOk; ">
+
+  <div class="alert alert-danger" >
+  Metric cant be apply to this type of product
+  </div>
+  </div>
+
+  <div *ngIf="!isProductInDb; ">
+
+    <div class="alert alert-danger" >
+      There is no such of product in database
+    </div>
+  </div>
+
+    <div *ngIf="!isMnValueOk; ">
+
+      <div class="alert alert-danger" >
+        Insufficient product quantity
+      </div>
+    </div>
+
+<form class="form-form" [formGroup]="addProductForm" fxLayout="column" fxLayoutAlign="space-around center">
+  <mat-form-field appearance="fill">
+    <mat-label >Name of product in database</mat-label>
+    <input matInput formControlName="searchForProduct">
+  </mat-form-field><!--zrobić dynamiczne szukanie-->
+
+  <mat-form-field appearance="fill">
+    <mat-label >Amount</mat-label>
+    <input matInput formControlName="amountOfProduct">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" >
+    <mat-label >Metric</mat-label>
+    <mat-select formControlName="metric">
+      <mat-option value="gram">Gram</mat-option>
+      <mat-option value="milliliter">Milliliter</mat-option>
+      <mat-option value="piece">Piece</mat-option>
+    </mat-select>
+  </mat-form-field>
+
 </form>
 <button mat-raised-button
-
-        (click)="searchProduct(form.value);"
-        color="primary">Search
+        (click)="searchProduct(addProductForm.value);"
+        color="primary">Add product to ingredients
 </button>
+
+<mat-nav-list>
+  <a mat-list-item  *ngFor="let product of proList">{{product.amount}} {{product.metric}} of {{ product.name}} /s </a>
+</mat-nav-list>
+</div>
+</div>

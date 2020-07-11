@@ -11,12 +11,15 @@ import com.kosmala.springbootapp.payload.DetailedUserInfoRequest;
 import com.kosmala.springbootapp.payload.ProductRequest;
 import com.kosmala.springbootapp.repository.ProductRepository;
 import com.kosmala.springbootapp.security.UserPrincipal;
+import java.util.List;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.awt.*;
 
 @RestController
 @RequestMapping("/api/products")
@@ -33,7 +36,7 @@ public class ProductController
                     HttpStatus.BAD_REQUEST);
         }
         Product product = new Product();
-        //
+        //for 100g or 100ml or one piece
         product.setCarbo(productRequest.getCarbo());
         product.setFat(productRequest.getFat());
         product.setProtein(productRequest.getProtein());
@@ -51,9 +54,19 @@ public class ProductController
     @GetMapping()
     public ResponseEntity getProductByName(@RequestParam String name)
     {
-        System.out.println(name);
-        return ResponseEntity.ok(productRepository.findByName(name));
+        final Product byName = productRepository.findByName(name);
+        if(byName != null)
+        return ResponseEntity.ok(byName);
+        else return new ResponseEntity(new CustomResponse(false, "There is no such product!"),
+                HttpStatus.BAD_REQUEST);
     }
+    @GetMapping("/nameLike")
+    public List<Product> getProductByNameLike(@RequestParam String nameLike)
+    {
+        return productRepository.findByNameContains(nameLike);
+    }
+
+
 
     public double countKcal(double protein, double fat, double carbo)
     {
