@@ -22,4 +22,11 @@ export class ProductService {
       .set('name', name);
     return this.http.get<Product>(this.BASE_URL, {params});
   }
+
+  getProductByPartOfName(name): Observable<Product>
+  {
+    const params = new HttpParams()
+      .set('nameLike', name);
+    return this.http.get<Product>(this.BASE_URL+"/nameLike", {params});
+  }
 }

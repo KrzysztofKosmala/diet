@@ -20,7 +20,9 @@ export class RecipeComponent implements OnInit {
   isMetricOk = true;
   isMnValueOk = true;
   isProductInDb = true;
-  proList: Array<Product> = [];
+  chossenProductList: Array<Product> = [];
+  searchedProductListBasedOnInputChange: Array<Product> = [];
+
 
 
   addProductForm = new FormGroup({
@@ -49,11 +51,11 @@ export class RecipeComponent implements OnInit {
             if(form.amountOfProduct > response.min_value) {
               response.amount = form.amountOfProduct;
               response.metric = form.metric;
-              this.proList.push(response);
+              this.chossenProductList.push(response);
               this.isMetricOk = true;
               this.isMnValueOk =true;
               this.isProductInDb = true;
-              console.log(this.proList);
+              console.log(this.chossenProductList);
             }else {
               this.isMnValueOk = false;
             }
@@ -71,11 +73,12 @@ export class RecipeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.addProductForm.valueChanges.subscribe(result => console.log(result))
   }
 
   createRecipe(formValue) {
 
-    this.proList.forEach(product => {
+    this.chossenProductList.forEach(product => {
       product.metric = this.transformMetricMap.get(product.metric)
     });
 
@@ -84,7 +87,7 @@ export class RecipeComponent implements OnInit {
         name: formValue.name,
         description: formValue.description,
         type: formValue.type,
-        products: this.proList,
+        products: this.chossenProductList,
       };
 
     this.recipeService.createRecipe(json).toPromise()
@@ -99,5 +102,14 @@ export class RecipeComponent implements OnInit {
       }
     )
 
+  }
+
+  pingingSearch(value: string) {
+    this.productService.getProductByPartOfName(name).toPromise().then(response=>
+    {
+      console.log(response)
+    }
+
+    ).catch(err => console.log(err))
   }
 }

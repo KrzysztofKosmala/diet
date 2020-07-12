@@ -63,7 +63,10 @@
 <form class="form-form" [formGroup]="addProductForm" fxLayout="column" fxLayoutAlign="space-around center">
   <mat-form-field appearance="fill">
     <mat-label >Name of product in database</mat-label>
-    <input matInput formControlName="searchForProduct">
+    <label>
+      <input #my matInput formControlName="searchForProduct" (keypress)="pingingSearch(my.value)" >
+    </label>
+
   </mat-form-field><!--zrobić dynamiczne szukanie-->
 
   <mat-form-field appearance="fill">
@@ -87,7 +90,7 @@
 </button>
 
 <mat-nav-list>
-  <a mat-list-item  *ngFor="let product of proList">{{product.amount}} {{product.metric}} of {{ product.name}} /s </a>
+  <a mat-list-item  *ngFor="let product of chossenProductList">{{product.amount}} {{product.metric}} of {{ product.name}} /s </a>
 </mat-nav-list>
 </div>
 </div>
