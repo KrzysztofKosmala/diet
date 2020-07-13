@@ -16,7 +16,14 @@ width: 100%;
 }
 
 .mat-form-field {
+  width:80% !important;
+
+}
+.mat-selection-list{
   width:80% !important
+}
+::ng-deep .wrap{
+  margin-bottom: -1.25em;
 }
 .title-center {
   flex: 1 1 auto;

@@ -23,10 +23,10 @@ export class ProductService {
     return this.http.get<Product>(this.BASE_URL, {params});
   }
 
-  getProductByPartOfName(name): Observable<Product>
+  getProductByPartOfName(name): Observable<Array<Product>>
   {
     const params = new HttpParams()
       .set('nameLike', name);
-    return this.http.get<Product>(this.BASE_URL+"/nameLike", {params});
+    return this.http.get<Array<Product>>(this.BASE_URL+"/nameLike", {params});
   }
 }

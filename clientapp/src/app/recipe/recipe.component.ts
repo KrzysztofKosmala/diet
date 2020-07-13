@@ -23,7 +23,7 @@ export class RecipeComponent implements OnInit {
   chossenProductList: Array<Product> = [];
   searchedProductListBasedOnInputChange: Array<Product> = [];
 
-
+  selectedAsIngredient: Product;
 
   addProductForm = new FormGroup({
 
@@ -44,14 +44,13 @@ export class RecipeComponent implements OnInit {
   searchProduct(form)
   {
 
-      this.productService.getProductByName(form.searchForProduct).toPromise()
-        .then(response =>{
-          if(response.metric === this.transformMetricMap.get(form.metric))
+
+          if(this.selectedAsIngredient.metric === this.transformMetricMap.get(form.metric))
           {
-            if(form.amountOfProduct > response.min_value) {
-              response.amount = form.amountOfProduct;
-              response.metric = form.metric;
-              this.chossenProductList.push(response);
+            if(form.amountOfProduct > this.selectedAsIngredient.min_value) {
+              this.selectedAsIngredient.amount = form.amountOfProduct;
+              this.selectedAsIngredient.metric = form.metric;
+              this.chossenProductList.push(this.selectedAsIngredient);
               this.isMetricOk = true;
               this.isMnValueOk =true;
               this.isProductInDb = true;
@@ -64,16 +63,11 @@ export class RecipeComponent implements OnInit {
             this.isMetricOk = false;
           }
 
-          }
-        ).catch(error =>
-      {
-        this.isProductInDb = false;
-         console.log(error);
-      })
+
+
   }
 
   ngOnInit(): void {
-    this.addProductForm.valueChanges.subscribe(result => console.log(result))
   }
 
   createRecipe(formValue) {
@@ -104,12 +98,24 @@ export class RecipeComponent implements OnInit {
 
   }
 
-  pingingSearch(value: string) {
-    this.productService.getProductByPartOfName(name).toPromise().then(response=>
+  pingingSearch(eventKey) {
+    console.log(eventKey);
+    this.productService.getProductByPartOfName(eventKey).toPromise().then(response=>
     {
-      console.log(response)
+      this.searchedProductListBasedOnInputChange = [];
+      console.log(response);
+      response.forEach(element => this.searchedProductListBasedOnInputChange.push(element))
+      ;
+      console.log(this.searchedProductListBasedOnInputChange)
     }
 
     ).catch(err => console.log(err))
+  }
+
+  onSelection(e, v) {
+    this.selectedAsIngredient = null;
+
+    this.selectedAsIngredient = e.option.value;
+    console.log(e.option.value)
   }
 }

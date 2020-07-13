@@ -20,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
@@ -61,9 +62,12 @@ public class ProductController
                 HttpStatus.BAD_REQUEST);
     }
     @GetMapping("/nameLike")
-    public List<Product> getProductByNameLike(@RequestParam String nameLike)
+    public ResponseEntity getProductByNameLike(@RequestParam String nameLike)
     {
-        return productRepository.findByNameContains(nameLike);
+        if(nameLike.length()>0)
+        return ResponseEntity.ok(productRepository.findByNameContains(nameLike).stream().limit(5).collect(Collectors.toList()));
+        else return new ResponseEntity(new CustomResponse(false, "There is no such product!"),
+                HttpStatus.BAD_REQUEST);
     }
 
 

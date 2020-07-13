@@ -61,13 +61,26 @@
     </div>
 
 <form class="form-form" [formGroup]="addProductForm" fxLayout="column" fxLayoutAlign="space-around center">
-  <mat-form-field appearance="fill">
+  <mat-form-field class="wrap" appearance="fill">
     <mat-label >Name of product in database</mat-label>
-    <label>
-      <input #my matInput formControlName="searchForProduct" (keypress)="pingingSearch(my.value)" >
-    </label>
+      <input   matInput formControlName="searchForProduct" (keydown)="pingingSearch($event.key)" >
 
-  </mat-form-field><!--zrobić dynamiczne szukanie-->
+  </mat-form-field>
+
+  <mat-selection-list [multiple]="false" appearance="fill" style="margin-bottom: 18px; padding: 0" #list (selectionChange)="onSelection($event, list.selectedOptions)">
+    <mat-list-option mat-list-item  *ngFor="let product of searchedProductListBasedOnInputChange" [value]="product" >
+      <span style="font-size:14px">{{product.name}}</span>
+      <span style="font-size:10px; color: gray">
+        kcal {{product.kcal}} P {{product.protein}} F {{product.fat}}  C {{product.carbo}} /
+        <span *ngIf="product.metric!='PC'" style="font-size:10px; color: gray"> 100 </span>
+        <span *ngIf="product.metric=='PC'" style="font-size:10px; color: gray"> piece </span>
+        <span *ngIf="product.metric!='PC'" style="font-size:10px; color: gray">  {{product.metric}} </span>
+      </span>
+
+
+      <span style="font-size:10px; color: gray">  </span>
+    </mat-list-option>
+  </mat-selection-list>
 
   <mat-form-field appearance="fill">
     <mat-label >Amount</mat-label>
