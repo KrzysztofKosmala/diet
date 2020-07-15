@@ -1,5 +1,11 @@
 <div class="container">
+
   <div class="Recipe" fxFlex="70%">
+    <div *ngIf="successfullyAdded; ">
+    <div class="alert alert-success" >
+      Thanks, recipe has been successfully added!
+    </div>
+  </div>
     <mat-toolbar class="bg-transparent black-text" >
       <span class="title-center">Recipe</span>
     </mat-toolbar>
@@ -39,22 +45,14 @@
     <mat-toolbar class="bg-transparent black-text" >
       <span class="title-center">Ingredients</span>
     </mat-toolbar>
-<div *ngIf="!isMetricOk; ">
-
-  <div class="alert alert-danger" >
-  Metric cant be apply to this type of product
-  </div>
-  </div>
 
   <div *ngIf="!isProductInDb; ">
-
     <div class="alert alert-danger" >
       There is no such of product in database
     </div>
   </div>
 
     <div *ngIf="!isMnValueOk; ">
-
       <div class="alert alert-danger" >
         Insufficient product quantity
       </div>
@@ -63,37 +61,26 @@
 <form class="form-form" [formGroup]="addProductForm" fxLayout="column" fxLayoutAlign="space-around center">
   <mat-form-field class="wrap" appearance="fill">
     <mat-label >Name of product in database</mat-label>
-      <input   matInput formControlName="searchForProduct" (keydown)="pingingSearch($event.key)" >
-
+      <input  matInput formControlName="searchForProduct" (keyup)="pingingSearch($event)" >
   </mat-form-field>
 
   <mat-selection-list [multiple]="false" appearance="fill" style="margin-bottom: 18px; padding: 0" #list (selectionChange)="onSelection($event, list.selectedOptions)">
     <mat-list-option mat-list-item  *ngFor="let product of searchedProductListBasedOnInputChange" [value]="product" >
       <span style="font-size:14px">{{product.name}}</span>
       <span style="font-size:10px; color: gray">
-        kcal {{product.kcal}} P {{product.protein}} F {{product.fat}}  C {{product.carbo}} /
+        kcal {{product.kcal}} | P {{product.protein}} | F {{product.fat}} | C {{product.carbo}} /
         <span *ngIf="product.metric!='PC'" style="font-size:10px; color: gray"> 100 </span>
         <span *ngIf="product.metric=='PC'" style="font-size:10px; color: gray"> piece </span>
         <span *ngIf="product.metric!='PC'" style="font-size:10px; color: gray">  {{product.metric}} </span>
       </span>
-
-
       <span style="font-size:10px; color: gray">  </span>
     </mat-list-option>
   </mat-selection-list>
 
   <mat-form-field appearance="fill">
-    <mat-label >Amount</mat-label>
+    <mat-label *ngIf="selectedAsIngredient!=null" >Amount of {{transformMetricMapMetricToWord.get(selectedAsIngredient.metric)}}</mat-label>
+    <mat-label *ngIf="selectedAsIngredient==null" >Amount </mat-label>
     <input matInput formControlName="amountOfProduct">
-  </mat-form-field>
-
-  <mat-form-field appearance="fill" >
-    <mat-label >Metric</mat-label>
-    <mat-select formControlName="metric">
-      <mat-option value="gram">Gram</mat-option>
-      <mat-option value="milliliter">Milliliter</mat-option>
-      <mat-option value="piece">Piece</mat-option>
-    </mat-select>
   </mat-form-field>
 
 </form>
@@ -103,7 +90,7 @@
 </button>
 
 <mat-nav-list>
-  <a mat-list-item  *ngFor="let product of chossenProductList">{{product.amount}} {{product.metric}} of {{ product.name}} /s </a>
+  <a mat-list-item  *ngFor="let product of chossenProductList">• {{product.amount}} {{transformMetricMapMetricToWord.get(product.metric)}} of {{ product.name}} /s </a>
 </mat-nav-list>
 </div>
 </div>

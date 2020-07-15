@@ -17,7 +17,7 @@ export class RecipeComponent implements OnInit {
   private productService: ProductService,
               private recipeService: RecipeService) { }
 
-  isMetricOk = true;
+  successfullyAdded;
   isMnValueOk = true;
   isProductInDb = true;
   chossenProductList: Array<Product> = [];
@@ -29,7 +29,6 @@ export class RecipeComponent implements OnInit {
 
     searchForProduct : new FormControl(),
     amountOfProduct : new FormControl(),
-    metric : new FormControl(),
   });
 
   recipeForm = new FormGroup({
@@ -39,32 +38,20 @@ export class RecipeComponent implements OnInit {
     type: new FormControl(),
   });
 
-  transformMetricMap  = new Map([['milliliter', 'ML'], ['gram', 'GR'], ['piece', 'PC']]);
+  transformMetricMapWordToMetric  = new Map([['milliliter', 'ML'], ['gram', 'GR'], ['piece', 'PC']]);
+  transformMetricMapMetricToWord  = new Map([['ML', 'milliliter'], ['GR', 'gram'], ['PC', 'pieces']]);
 
   searchProduct(form)
   {
-
-
-          if(this.selectedAsIngredient.metric === this.transformMetricMap.get(form.metric))
-          {
             if(form.amountOfProduct > this.selectedAsIngredient.min_value) {
               this.selectedAsIngredient.amount = form.amountOfProduct;
-              this.selectedAsIngredient.metric = form.metric;
               this.chossenProductList.push(this.selectedAsIngredient);
-              this.isMetricOk = true;
               this.isMnValueOk =true;
               this.isProductInDb = true;
               console.log(this.chossenProductList);
             }else {
               this.isMnValueOk = false;
             }
-          }
-          else{
-            this.isMetricOk = false;
-          }
-
-
-
   }
 
   ngOnInit(): void {
@@ -73,7 +60,7 @@ export class RecipeComponent implements OnInit {
   createRecipe(formValue) {
 
     this.chossenProductList.forEach(product => {
-      product.metric = this.transformMetricMap.get(product.metric)
+      product.metric = this.transformMetricMapWordToMetric.get(product.metric)
     });
 
     var json =
@@ -86,30 +73,35 @@ export class RecipeComponent implements OnInit {
 
     this.recipeService.createRecipe(json).toPromise()
       .then(data =>
-
-        console.log(data)
-
+      {
+        console.log(data);
+        this.successfullyAdded =true;
+      }
       )
       .catch(error =>
       {
-        console.log(error)
+        console.log(error);
+        this.successfullyAdded = false;
       }
     )
 
   }
 
-  pingingSearch(eventKey) {
-    console.log(eventKey);
-    this.productService.getProductByPartOfName(eventKey).toPromise().then(response=>
+  pingingSearch(event) {
+    this.productService.getProductByPartOfName(event.target.value).toPromise().then(response=>
     {
       this.searchedProductListBasedOnInputChange = [];
       console.log(response);
-      response.forEach(element => this.searchedProductListBasedOnInputChange.push(element))
-      ;
+      response.forEach(element => this.searchedProductListBasedOnInputChange.push(element));
       console.log(this.searchedProductListBasedOnInputChange)
     }
 
-    ).catch(err => console.log(err))
+    ).catch(err => {
+      this.searchedProductListBasedOnInputChange = [];
+      var errorProduct = new Product();
+      errorProduct.name = err.error.message;
+      this.searchedProductListBasedOnInputChange.push(errorProduct);
+    })
   }
 
   onSelection(e, v) {

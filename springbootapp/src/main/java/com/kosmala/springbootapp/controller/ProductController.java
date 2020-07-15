@@ -65,8 +65,15 @@ public class ProductController
     public ResponseEntity getProductByNameLike(@RequestParam String nameLike)
     {
         if(nameLike.length()>0)
-        return ResponseEntity.ok(productRepository.findByNameContains(nameLike).stream().limit(5).collect(Collectors.toList()));
-        else return new ResponseEntity(new CustomResponse(false, "There is no such product!"),
+        {
+            final List<Product> collect = productRepository.findByNameContains(nameLike).stream().limit(5).collect(Collectors.toList());
+            if(collect.size()>0)
+            return ResponseEntity.ok(collect);
+            else return new ResponseEntity(new CustomResponse(false, "There is no such product!"),
+                HttpStatus.BAD_REQUEST);
+
+        }
+        else return new ResponseEntity(new CustomResponse(false, "Please pass at least one digit"),
                 HttpStatus.BAD_REQUEST);
     }
 
