@@ -5,6 +5,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {FormComponentBase} from "../signup/infrastructure/form-component-base";
 import {map} from "rxjs/operators";
 import {HttpErrorResponse} from "@angular/common/http";
+import {formatDate} from "@angular/common";
 
 @Component({
   selector: 'login',
@@ -42,7 +43,8 @@ export class LoginComponent extends FormComponentBase implements OnInit, AfterVi
         {
           this.invalidLogin = false;
           localStorage.setItem('TOKEN', data.accessToken);
-          this.router.navigate(['/user']);
+          localStorage.setItem('CURRENT_DATE', formatDate(new Date(), 'yyyy-MM-dd', 'en').toString());
+          this.router.navigate(['/user/hello']);
         }
         ,(error) => {
           this.invalidLogin = true;

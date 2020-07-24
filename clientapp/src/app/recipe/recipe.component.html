@@ -61,7 +61,7 @@
 <form class="form-form" [formGroup]="addProductForm" fxLayout="column" fxLayoutAlign="space-around center">
   <mat-form-field class="wrap" appearance="fill">
     <mat-label >Name of product in database</mat-label>
-      <input  matInput formControlName="searchForProduct" (keyup)="pingingSearch($event)" >
+      <input  matInput autocomplete="off" formControlName="searchForProduct" (keyup)="pingingSearch($event)" >
   </mat-form-field>
 
   <mat-selection-list [multiple]="false" appearance="fill" style="margin-bottom: 18px; padding: 0" #list (selectionChange)="onSelection($event, list.selectedOptions)">

@@ -19,6 +19,7 @@ export class UserComponent implements OnInit {
     private authService: AuthService) { }
 
   ngOnInit(): void {
+
   }
 
   isClicked()

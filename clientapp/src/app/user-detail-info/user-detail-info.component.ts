@@ -87,7 +87,7 @@ export class  UserDetailInfoComponent implements OnInit {
         {
           this.hasDetailInfo=true;
           console.log(data);
-          this.router.navigate(['/user']).then(r => console.log(r));
+          this.router.navigate(['/user/hello']).then(r => console.log(r));
 
         })
       .catch(error =>

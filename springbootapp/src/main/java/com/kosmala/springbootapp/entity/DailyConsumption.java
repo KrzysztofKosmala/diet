@@ -1,6 +1,7 @@
 package com.kosmala.springbootapp.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -15,19 +16,19 @@ import java.util.*;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@ToString
 public class DailyConsumption
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Type(type="date")
-    private Date date;
+    private String date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    private int currentAmountOfMeals;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "daily_consumption_recipe",
@@ -35,12 +36,7 @@ public class DailyConsumption
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     private Set<Recipe> recipes = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "daily_consumpion_product",
-            joinColumns = @JoinColumn(name = "daily_consumption_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> products = new HashSet<>();
-
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily", orphanRemoval = true, fetch=FetchType.EAGER)
+    private Set<DailyConsumptionProductAmount> products = new HashSet<>();
 
 }

@@ -3,7 +3,7 @@
     <mat-nav-list fxLayout="column" fxLayoutAlign="space-evenly none">
 
       <a mat-list-item routerLink="/user/details"> Detailed information </a>
-      <a mat-list-item [routerLink]="'/user'"> Daily </a>
+      <a mat-list-item [routerLink]="'/user/daily'"> Daily </a>
       <a mat-list-item [routerLink]="'/user/recipe'"> Create recipe </a>
       <a mat-list-item [routerLink]="'/user/product'"> Create product </a>
       <a mat-list-item [routerLink]="'/user'"> Shopping list </a>
@@ -29,6 +29,8 @@
       </button>
     </mat-toolbar>
 
-    <router-outlet></router-outlet>
+    <router-outlet>
+
+      </router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

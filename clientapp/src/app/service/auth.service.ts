@@ -25,6 +25,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('TOKEN');
+    localStorage.removeItem('CURRENT_DATE');
     this.http.get(this.BASE_URL+'/logout')
   }
 

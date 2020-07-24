@@ -36,6 +36,13 @@ import {MatSelectModule} from '@angular/material/select';
 import { ProductComponent } from './product/product.component';
 import { RecipeComponent } from './recipe/recipe.component';
 
+import { DailyComponent } from './daily/daily.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {YoutubePlayerModule} from "ng2-youtube-player";
+import {VideoModule} from "./video/video.module";
+import { HelloComponent } from './hello/hello.component';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+
 
 
 @NgModule({
@@ -50,6 +57,8 @@ import { RecipeComponent } from './recipe/recipe.component';
     UserDetailInfoComponent,
     ProductComponent,
     RecipeComponent,
+    DailyComponent,
+    HelloComponent,
 
 
 
@@ -79,7 +88,12 @@ import { RecipeComponent } from './recipe/recipe.component';
     MatListModule,
     MatMenuModule,
     HttpClientModule,
-    MatSelectModule
+    MatSelectModule,
+    MatAutocompleteModule,
+    YoutubePlayerModule,
+    VideoModule,
+    MatProgressBarModule,
+
   ],
   providers: [AuthService,
     {

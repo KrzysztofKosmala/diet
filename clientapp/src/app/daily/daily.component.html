@@ -1,0 +1,171 @@
+<mat-toolbar style="justify-content: center; height: 20px">
+  <button (click)="decrementDay()" style="min-height: 15px !important;
+      min-width: 15px !important;
+      font-size: 8px !important;
+      line-height: 0px;
+      margin-bottom: 10px !important;
+      margin-right: 20px" mat-raised-button color="primary">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+
+  <p>{{currentDate}}</p>
+  <button (click)="incrementDay()"  style="min-height: 15px !important;
+      min-width: 15px !important;
+      font-size: 8px !important;
+      line-height: 0px;
+      margin-bottom: 10px !important;
+      margin-left: 20px" mat-raised-button  color="primary">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+
+</mat-toolbar>
+
+<div style="width:35%; display:inline-block;">
+<div *ngFor="let i of amountOfMeals" >
+<mat-list style="border-bottom: solid; border-bottom-width: thin; " >
+   <div style="font-size:18px; ">
+      Meal {{i}}
+
+     </div>
+  <span class="spacer" ></span>
+  <button (click)="iWantToSearch = true; addProductToThisMeal = i;"  style="min-height: 15px !important;
+      min-width: 15px !important;
+      font-size: 8px !important;
+      line-height: 0px;
+      margin-bottom: 10px !important;
+      display:inline-block;
+" mat-raised-button  color="primary">
+  <mat-icon >add</mat-icon>
+  </button>
+
+
+
+  <mat-list-item *ngFor="let product of meals.get(i); let x = index " >
+
+    {{product.name  }} {{product.amount }} {{transformMetricMapMetricToWord.get(product.metric)}}
+    <span *ngIf="product.metric === 'PC';" style="font-size:12px; color: gray; margin-left: 15px ">
+      kcal {{product.amount * product.kcal | number:'1.1-1'}} | P {{product.amount * product.protein | number:'1.1-1'}} | F {{product.amount * product.fat | number:'1.1-1'}} | C {{product.amount * product.carbo | number:'1.1-1'}}
+    </span>
+    <span  *ngIf="product.metric != 'PC'" style="font-size:12px; color: gray; margin-left: 15px ">
+      kcal {{(product.amount * product.kcal) / 100 | number:'1.1-1'}} | P {{(product.amount * product.protein) / 100 | number:'1.1-1'}} | F {{(product.amount * product.fat) / 100 | number:'1.1-1'}} | C {{(product.amount * product.carbo) / 100 | number:'1.1-1'}}
+    </span>
+
+  <span class="spacer"></span>
+    <button (click)="remove(i, x)"  style="min-height: 15px !important;
+      min-width: 15px !important;
+      font-size: 8px !important;
+      line-height: 0px; " mat-raised-button  color="primary">
+      <mat-icon >remove</mat-icon>
+    </button>
+  </mat-list-item>
+
+</mat-list>
+</div>
+</div>
+
+<div style=" display:inline-block; position: absolute; background: #fafafa; " *ngIf="iWantToSearch" >
+  <mat-toolbar class="bg-dark white-text" style="min-height: 30px; max-height: 30px" >
+    Search
+    <span class="spacer"></span>
+    <mat-icon class="icon" aria-hidden="false" aria-label="Example user verified icon" (click)="iWantToSearch = false">close</mat-icon>
+  </mat-toolbar>
+  <form class="form-form" [formGroup]="addProductForm" fxLayout="column" fxLayoutAlign="center center">
+    <mat-form-field class="wrap" appearance="fill" >
+      <mat-label >Name of product in database</mat-label>
+      <input  matInput autocomplete="off" formControlName="searchForProduct" (keyup)="pingingSearch($event)" >
+    </mat-form-field>
+
+    <mat-selection-list [multiple]="false" appearance="fill" style="margin-bottom: 18px; padding: 0" #list (selectionChange)="onSelection($event, list.selectedOptions)">
+      <mat-list-option mat-list-item  *ngFor="let product of searchedProductListBasedOnInputChange" [value]="product" >
+        <span style="font-size:14px">{{product.name}}</span>
+        <span style="font-size:10px; color: gray">
+        kcal {{product.kcal}} | P {{product.protein}} | F {{product.fat}} | C {{product.carbo}} /
+        <span *ngIf="product.metric!='PC'" style="font-size:10px; color: gray"> 100 </span>
+        <span *ngIf="product.metric=='PC'" style="font-size:10px; color: gray"> piece </span>
+        <span *ngIf="product.metric!='PC'" style="font-size:10px; color: gray">  {{transformMetricMapMetricToWord.get(product.metric)}} </span>
+      </span>
+        <span style="font-size:10px; color: gray">  </span>
+      </mat-list-option>
+    </mat-selection-list>
+    <mat-form-field appearance="fill">
+      <mat-label *ngIf="chosenProduct!=null" >Amount of {{transformMetricMapMetricToWord.get(chosenProduct.metric)}}</mat-label>
+      <mat-label *ngIf="chosenProduct==null" >Amount </mat-label>
+      <input matInput formControlName="amountOfProduct">
+    </mat-form-field>
+
+
+  </form>
+  <button mat-raised-button
+          (click)="addProductToMeal(addProductForm.value);"
+          color="primary">Add product
+  </button>
+</div>
+
+<div style="width:50%; display:inline-block;">
+ przepisy
+</div>
+
+<div *ngIf="initialData!=null">
+  <mat-card style="margin-left: 7%;
+    margin-right: 7%;
+    margin-top: 5px">
+    <mat-card-content>
+      <h4 class="example-h2">{{eatenKcalValue}}/{{initialData.kcal}} kcal</h4>
+      <section class="example-section">
+        <mat-progress-bar mode="determinate"
+          [value]="(eatenKcalValue * 100) / initialData.kcal"
+         >
+        </mat-progress-bar>
+      </section>
+    </mat-card-content>
+  </mat-card>
+</div>
+<div  *ngIf="initialData!=null">
+  <mat-card style="margin-left: 7%;
+    margin-right: 7%;
+    margin-top: 5px;
+height: 10%"
+            fxLayout="row" fxLayoutAlign="space-evenly center" >
+    <mat-card-content [fxFlex]= "percentOfProtein" style="margin: 10px; margin-top: 0">
+      <h5 class="example-h2">{{eatenProteinValue}}/{{initialData.protein}} Protein</h5>
+      <section class="example-section">
+        <mat-progress-bar mode="determinate"
+                          [value]="(eatenKcalValue * 100) / initialData.kcal"
+        >
+        </mat-progress-bar>
+      </section>
+    </mat-card-content>
+    <mat-card-content [fxFlex]= "percentOfFat" style="margin: 10px; margin-top: 0">
+      <h5 class="example-h2">{{eatenFatValue}}/{{initialData.fat}} Fat</h5>
+      <section class="example-section">
+        <mat-progress-bar mode="determinate"
+                          [value]="(eatenKcalValue * 100) / initialData.kcal"
+        >
+        </mat-progress-bar>
+      </section>
+    </mat-card-content>
+    <mat-card-content [fxFlex]= "percentOfCarbo"  style="margin: 10px; margin-top: 0 !important;">
+      <h5 class="example-h2">{{eatenCarboValue}}/{{initialData.carbo}} Carbo</h5>
+      <section class="example-section">
+        <mat-progress-bar mode="determinate"
+                          [value]="(eatenKcalValue * 100) / initialData.kcal"
+        >
+        </mat-progress-bar>
+      </section>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div style="margin-top: 1%" fxLayoutAlign="space-evenly center">
+
+  <button mat-raised-button
+          (click)="save()"
+          color="primary">Save
+  </button>
+
+  <button mat-raised-button
+        (click)="save()"
+        color="primary">Send ingredients to shopping list
+  </button>
+
+</div>
