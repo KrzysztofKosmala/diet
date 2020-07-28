@@ -1,5 +1,6 @@
 import {Product} from "../payload/Product";
-import {ProductAmountMealNumber} from "./ProductAmountMealNumber";
+import {ProductAmountMealNumber} from "../payload/ProductAmountMealNumber";
+import {RecipeMultiplierMealNumber} from "../payload/RecipeMultiplierMealNumber";
 
 export class DailyPayload
 {
@@ -9,5 +10,6 @@ export class DailyPayload
   protein: number;
   fat: number;
   carbo: number;
-  productAmountMealNumbers: Array<ProductAmountMealNumber>
+  productAmountMealNumbers: Array<ProductAmountMealNumber>;
+  recipesMultiplierMealNumber: Array<RecipeMultiplierMealNumber>;
 }

@@ -1,4 +1,4 @@
-import {Product} from "../payload/Product";
+import {Product} from "./Product";
 
 export class ProductAmountMealNumber
 {

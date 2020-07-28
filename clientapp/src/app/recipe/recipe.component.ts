@@ -63,6 +63,7 @@ export class RecipeComponent implements OnInit {
       product.metric = this.transformMetricMapWordToMetric.get(product.metric)
     });
 
+    //zamienic na Recipe
     var json =
       {
         name: formValue.name,

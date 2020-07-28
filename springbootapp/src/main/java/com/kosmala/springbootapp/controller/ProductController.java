@@ -1,25 +1,19 @@
 package com.kosmala.springbootapp.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.kosmala.springbootapp.entity.DetailedUserInfo;
 import com.kosmala.springbootapp.entity.Metric;
 import com.kosmala.springbootapp.entity.Product;
-import com.kosmala.springbootapp.entity.User;
-import com.kosmala.springbootapp.helpers.countCaloricIntake.Ratio;
 import com.kosmala.springbootapp.payload.CustomResponse;
-import com.kosmala.springbootapp.payload.DetailedUserInfoRequest;
-import com.kosmala.springbootapp.payload.ProductRequest;
+import com.kosmala.springbootapp.payload.ProductPayload;
 import com.kosmala.springbootapp.repository.ProductRepository;
-import com.kosmala.springbootapp.security.UserPrincipal;
+
 import java.util.List;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,22 +24,22 @@ public class ProductController
     ProductRepository productRepository;
 
     @PostMapping("/create")
-    public ResponseEntity createProduct(@RequestBody ProductRequest productRequest) throws JsonProcessingException
+    public ResponseEntity createProduct(@RequestBody ProductPayload productPayload) throws JsonProcessingException
     {
-        if(productRepository.existsByName(productRequest.getName())) {
+        if(productRepository.existsByName(productPayload.getName())) {
             return new ResponseEntity(new CustomResponse(false, "This product is already in DB!"),
                     HttpStatus.BAD_REQUEST);
         }
         Product product = new Product();
         //for 100g or 100ml or one piece
-        product.setCarbo(productRequest.getCarbo());
-        product.setFat(productRequest.getFat());
-        product.setProtein(productRequest.getProtein());
-        product.setDivisible(productRequest.isDivisible());
-        product.setKcal(countKcal(productRequest.getProtein(), productRequest.getFat(), productRequest.getCarbo()));
-        product.setMetric(Metric.valueOf(productRequest.getMetric()));
-        product.setMin_value(productRequest.getMin_value());
-        product.setName(productRequest.getName());
+        product.setCarbo(productPayload.getCarbo());
+        product.setFat(productPayload.getFat());
+        product.setProtein(productPayload.getProtein());
+        product.setDivisible(productPayload.isDivisible());
+        product.setKcal(countKcal(productPayload.getProtein(), productPayload.getFat(), productPayload.getCarbo()));
+        product.setMetric(Metric.valueOf(productPayload.getMetric()));
+        product.setMin_value(productPayload.getMin_value());
+        product.setName(productPayload.getName());
 
         productRepository.save(product);
 

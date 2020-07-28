@@ -7,9 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductAmountMealNumber
+public class RecipeMultiplierMealNumber
 {
-    ProductPayload product;
-
+    RecipePayload recipe;
     int mealNumber;
 }

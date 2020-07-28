@@ -1,6 +1,7 @@
 package com.kosmala.springbootapp.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -33,5 +34,8 @@ public class Recipe
     private double kcal;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<RecipeProductAmount> products = new HashSet<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "recipe")
+    private Set<DailyConsumptionRecipeMultiplier> daily = new HashSet<>();
 
 }

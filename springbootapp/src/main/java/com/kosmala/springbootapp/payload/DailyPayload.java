@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DailyResponse
+public class DailyPayload
 {
     int amountOfMeals;
     int kcal;
@@ -17,4 +17,5 @@ public class DailyResponse
     int carbo;
     ////////////////////
     List<ProductAmountMealNumber> productAmountMealNumbers;
+    List<RecipeMultiplierMealNumber> recipesMultiplierMealNumber;
 }

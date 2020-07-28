@@ -30,11 +30,8 @@ public class DailyConsumption
 
     private int currentAmountOfMeals;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "daily_consumption_recipe",
-            joinColumns = @JoinColumn(name = "daily_consumption_id"),
-            inverseJoinColumns = @JoinColumn(name = "recipe_id"))
-    private Set<Recipe> recipes = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily", orphanRemoval = true, fetch=FetchType.EAGER)
+    private Set<DailyConsumptionRecipeMultiplier> recipes = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily", orphanRemoval = true, fetch=FetchType.EAGER)
     private Set<DailyConsumptionProductAmount> products = new HashSet<>();
