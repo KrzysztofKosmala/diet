@@ -4,7 +4,7 @@ export class Recipe
 {
     name: String;
     description: String;
-    type: String;
+    type: Array<String>;
     kcal: number;
 
     multiplier: number;

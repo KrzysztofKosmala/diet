@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
+import {PFCK} from "../daily/PFCK";
+import {DailyPayload} from "../daily/dailyPayload";
+import {Recipe} from "./payload/Recipe";
+import set = Reflect.set;
 
 @Injectable({
   providedIn: 'root'
@@ -15,5 +19,15 @@ export class RecipeService {
   createRecipe(recipe)
   {
     return this.http.post(this.BASE_URL+"/create", recipe);
+  }
+
+  findRecipeBasedOnNeededPFCK(pfck)
+  {
+    const params = new HttpParams()
+      .set('protein', pfck.protein)
+      .set('fat', pfck.fat)
+      .set('carbo', pfck.carbo)
+      .set('kcal', pfck.kcal);
+    return this.http.get<Recipe>(this.BASE_URL+"/hintTheRecipe",{params});
   }
 }

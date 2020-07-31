@@ -2,13 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import {DailyService} from "../service/daily.service";
 import {formatDate} from '@angular/common';
 import {DailyPayload} from "./dailyPayload";
-import {Product} from "../payload/Product";
+import {Product} from "../service/payload/Product";
 import {FormControl, FormGroup} from "@angular/forms";
 import {ProductService} from "../service/product.service";
-import {ProductAmountMealNumber} from "../payload/ProductAmountMealNumber";
-import {Recipe} from "../payload/Recipe";
-import {RecipeMultiplierMealNumber} from "../payload/RecipeMultiplierMealNumber";
+import {ProductAmountMealNumber} from "../service/payload/ProductAmountMealNumber";
+import {Recipe} from "../service/payload/Recipe";
+import {RecipeMultiplierMealNumber} from "../service/payload/RecipeMultiplierMealNumber";
 import { PFCK } from './PFCK';
+import {RecipeService} from "../service/recipe.service";
+import {ShoppingListService} from "../service/shopping-list.service";
+import {ProductsWrapper} from "../service/payload/ProductsWrapper";
 
 
 @Component({
@@ -19,11 +22,11 @@ import { PFCK } from './PFCK';
 export class DailyComponent implements OnInit {
 
   currentDate ;
-  constructor(private productService: ProductService, private dailyService: DailyService) {
+  isPopupOpened = false;
+  constructor(private productService: ProductService, private dailyService: DailyService, private recipeService: RecipeService, private shoppingListService: ShoppingListService)
+  {
     this.reloadByDate(localStorage.getItem('CURRENT_DATE'));
     this.currentDate = localStorage.getItem('CURRENT_DATE');
-
-
   }
 
   amountOfMeals;
@@ -36,23 +39,26 @@ export class DailyComponent implements OnInit {
   eatenProteinValue = 1;
   eatenFatValue = 1;
   eatenCarboValue = 1;
-  //meals statistics
-  proteinInMeal = 0;
-  fatInMeal =0;
-  carboInMeal = 0;
-  kcalInMeal = 0;
 
 
   chosenProduct: Product;
   productsInMeals: Map<number, Array<Product>>;
   recipes: Map<number, Array<Recipe>>;
   pfckLeftInEachMeal: Map<number, PFCK>;
+  isMealFinishedMap: Map<number, boolean>;
 
+  excludedRecipes: Array<String>;
+  currentMealNrForRecipeSearch: number;
+
+  hintedRecipe: Recipe;
   iWantToSearch = false;
   searchedProductListBasedOnInputChange: Array<Product> = [];
   transformMetricMapMetricToWord  = new Map([['ML', 'milliliter'], ['GR', 'gram'], ['PC', 'pieces']]);
   initialData: DailyPayload = null ;
   ngOnInit(): void {
+    this.shoppingListService.createShoppingListIfNeeded().toPromise()
+      .then(response => console.log(response))
+      .catch(err => console.log(err));
   }
 
   addProductForm = new FormGroup({
@@ -75,14 +81,18 @@ export class DailyComponent implements OnInit {
 
     this.dailyService.getDailyByDate(date.toString()).toPromise().then(response=>
     {
+      console.log(response)
       this.productsInMeals = new Map<number, Array<Product>>();
       this.recipes = new Map<number, Array<Recipe>>();
       this.pfckLeftInEachMeal =  new Map<number, PFCK>();
+      this.isMealFinishedMap = new Map<number, boolean>();
+      this.excludedRecipes = new Array<String>();
       for (var _i = 1; _i < response.amountOfMeals + 1; _i++)
       {
         this.productsInMeals.set(_i, new Array<Product>());
         this.recipes.set(_i, new Array<Recipe>());
         this.pfckLeftInEachMeal.set(_i, new PFCK(response.protein, response.fat, response.carbo, response.kcal, response.amountOfMeals));
+        this.isMealFinishedMap.set(_i, false);
       }
 
       if(response.productAmountMealNumbers != null)
@@ -92,18 +102,19 @@ export class DailyComponent implements OnInit {
           this.productsInMeals.get(e.mealNumber).push(e.product);
           this.pfckLeftInEachMeal.get(e.mealNumber).subtractProduct(e.product);
          this.addProductToStatistics(e.product);
+
         });
       }
-
+      console.log(this.pfckLeftInEachMeal);
+      if(response.recipesMultiplierMealNumber != null)
       response.recipesMultiplierMealNumber.forEach(e =>
       {
-        this.addRecipeWithProductToMeal(e.mealNumber, e.recipe);
+        this.addRecipeToMeal(e.mealNumber, e.recipe);
         this.pfckLeftInEachMeal.get(e.mealNumber).subtractRecipe(e.recipe);
       });
       this.amountOfMeals = Array(response.amountOfMeals).fill(0).map((x,i)=>i+1);
       this.initialData = response;
 
-      console.log(this.pfckLeftInEachMeal)
       console.log(response)
     }).then(   e =>
       {
@@ -119,15 +130,29 @@ export class DailyComponent implements OnInit {
     ).catch(err => {
       console.log(err);
     })
+    console.log(this.recipes)
+    console.log(this.productsInMeals)
+    console.log(this.isMealFinishedMap)
+    console.log(this.excludedRecipes)
+
   }
 
-  addRecipeWithProductToMeal(mealNr, recipe)
+  addRecipeToMeal(mealNr, recipe)
   {
+    this.excludedRecipes.push(recipe.name);
     this.recipes.get(mealNr).push(recipe);
-    recipe.products.forEach(product => {
-      this.productsInMeals.get(mealNr).push(product);
-      this.addProductToStatistics(product);
-    });
+    console.log(this.recipes)
+  }
+  addRecipeWithProductsToMeal(mealNr, recipe)
+  {
+    this.excludedRecipes.push(recipe.name);
+    this.recipes.get(mealNr).push(recipe);
+        recipe.products.forEach(product => {
+          this.productsInMeals.get(mealNr).push(product);
+          this.addProductToStatistics(product);
+          this.pfckLeftInEachMeal.get(mealNr).subtractProduct(product);
+        });
+    this.isPopupOpened = false;
   }
 
   addProductToStatistics(product)
@@ -135,33 +160,56 @@ export class DailyComponent implements OnInit {
     if(product.metric != 'PC')
     {
       this.eatenKcalValue += product.kcal * product.amount / 100;
-      this.eatenProteinValue += product.protein * product.amount / 100;
+      this.eatenProteinValue += product.protein * product.amount /  100;
       this.eatenFatValue += product.fat * product.amount / 100;
       this.eatenCarboValue += product.carbo * product.amount / 100;
     }else{
       this.eatenKcalValue += product.kcal * product.amount;
       this.eatenProteinValue += product.protein * product.amount;
-      this.eatenFatValue += product.fat * product.amount ;
+      this.eatenFatValue += product.fat * product.amount;
       this.eatenCarboValue += product.carbo * product.amount;
     }
+    this.eatenCarboValue =  Math.round(this.eatenCarboValue*10) / 10;
+    this.eatenFatValue = Math.round(this.eatenFatValue*10) / 10;
+    this.eatenKcalValue= Math.round(this.eatenKcalValue*10) / 10;
+    this.eatenProteinValue= Math.round(this.eatenProteinValue*10) / 10;
   }
 
-
-  removeProduct(meal, iterator , product) {
-    console.log(this.productsInMeals.get(meal).splice(iterator, 1));
+  removeProductFromStatistics(product)
+  {
     if(product.metric != 'PC')
     {
       this.eatenKcalValue -= product.kcal * product.amount / 100;
-      this.eatenProteinValue -= product.protein * product.amount / 100;
+      this.eatenProteinValue -= product.protein * product.amount /  100;
       this.eatenFatValue -= product.fat * product.amount / 100;
       this.eatenCarboValue -= product.carbo * product.amount / 100;
     }else{
-      this.eatenKcalValue -= product.kcal *product.amount;
+      this.eatenKcalValue -= product.kcal * product.amount;
       this.eatenProteinValue -= product.protein * product.amount;
-      this.eatenFatValue -= product.fat * product.amount ;
+      this.eatenFatValue -= product.fat * product.amount;
       this.eatenCarboValue -= product.carbo * product.amount;
     }
-    this.pfckLeftInEachMeal.get(meal).addProduct(product);
+    this.eatenCarboValue =  Math.round(this.eatenCarboValue*10) / 10;
+    this.eatenFatValue = Math.round(this.eatenFatValue*10) / 10;
+    this.eatenKcalValue= Math.round(this.eatenKcalValue*10) / 10;
+    this.eatenProteinValue= Math.round(this.eatenProteinValue*10) / 10;
+  }
+
+  removeProduct(meal, iterator , product) {
+
+    let i =0;
+    this.productsInMeals.get(meal).forEach(productToRemove =>
+    {
+      console.log(productToRemove.amount)
+      if(productToRemove.name === product.name && productToRemove.amount === product.amount)
+      {
+        this.productsInMeals.get(meal).splice(i, 1);
+        this.removeProductFromStatistics(product);
+        this.pfckLeftInEachMeal.get(meal).addProduct(product);
+      }
+      i++;
+    });
+
   }
 
   decrementDay() {
@@ -209,18 +257,9 @@ export class DailyComponent implements OnInit {
     this.productsInMeals.get(this.addProductToThisMeal).push(this.chosenProduct);
     this.addProductForm.reset();
     this.searchedProductListBasedOnInputChange = new Array<Product>();
-    if(this.chosenProduct.metric != 'PC')
-    {
-      this.eatenKcalValue += this.chosenProduct.kcal * this.chosenProduct.amount / 100;
-      this.eatenProteinValue += this.chosenProduct.protein * this.chosenProduct.amount / 100;
-      this.eatenFatValue += this.chosenProduct.fat * this.chosenProduct.amount / 100;
-      this.eatenCarboValue += this.chosenProduct.carbo * this.chosenProduct.amount / 100;
-    }else{
-      this.eatenKcalValue += this.chosenProduct.kcal * this.chosenProduct.amount;
-      this.eatenProteinValue += this.chosenProduct.protein * this.chosenProduct.amount;
-      this.eatenFatValue += this.chosenProduct.fat * this.chosenProduct.amount ;
-      this.eatenCarboValue += this.chosenProduct.carbo * this.chosenProduct.amount;
-    }
+
+    this.addProductToStatistics(this.chosenProduct);
+
     this.pfckLeftInEachMeal.get(this.addProductToThisMeal).subtractProduct(this.chosenProduct);
   }
 
@@ -247,10 +286,12 @@ export class DailyComponent implements OnInit {
       {
         let recipeMultiplierMealNumber = new RecipeMultiplierMealNumber();
         recipeMultiplierMealNumber.recipe = recipe;
+        recipeMultiplierMealNumber.recipe.multiplier = recipe.multiplier;
         recipeMultiplierMealNumber.mealNumber = key;
         daily.recipesMultiplierMealNumber.push(recipeMultiplierMealNumber);
       }
     }
+    console.log(daily);
       this.dailyService.updateDaily(daily, localStorage.getItem('CURRENT_DATE')).toPromise().then(data =>
       {
 
@@ -319,19 +360,100 @@ export class DailyComponent implements OnInit {
 
   removeRecipe(meal, iterator , recipe) {
     this.recipes.get(meal).splice(iterator, 1);
-    recipe.products.forEach(product => this.removeProduct(meal, iterator, product));
+    recipe.products.forEach(product =>
+    {
+      console.log("removeRecipe")
+      console.log(product)
+
+      let i =0;
+      this.productsInMeals.get(meal).forEach(productToRemove =>
+      {
+        console.log(productToRemove.amount)
+        if(productToRemove.name === product.name && productToRemove.amount === product.amount)
+        {
+          this.productsInMeals.get(meal).splice(i, 1);
+          this.removeProductFromStatistics(product);
+          this.pfckLeftInEachMeal.get(meal).addProduct(product);
+        }
+        i++;
+      });
+
+
+      //this.pfckLeftInEachMeal.get(meal).addProduct(product);
+    });
+  }
+
+  openPopupAndFindMeal(i)
+  {
+
+    this.currentMealNrForRecipeSearch = i;
+    this.findMeal(i);
+
+    this.isPopupOpened = true;
+
   }
 
   findMeal(i)
   {
-      let eatenKcalInMeal = 0;
-      //zebrac cale potrzebne info
-
-    //wyslac do  /api/recipe
-    //wynik wyswietlic w popupie
+    let neededPfck = this.pfckLeftInEachMeal.get(i);
+    var json =
+      {
+        kcal: neededPfck.kcal,
+        protein: neededPfck.protein,
+        carbo: neededPfck.carbo,
+        fat: neededPfck.fat
+      };
+    this.recipeService.findRecipeBasedOnNeededPFCK(json).toPromise()
+      .then(response => this.hintedRecipe = response)
+      .catch(error =>
+      {
+        console.log(error)
+      });
   }
 
-  finishThisMeal(i: any) {
+  finishThisMeal(mealNumber)
+  {
+
+    this.isMealFinishedMap.set(mealNumber, true);
+    let pfckLeftInMealToFinish = this.pfckLeftInEachMeal.get(mealNumber);
+    let notFinished = [];
+    this.pfckLeftInEachMeal.forEach((value: PFCK, key: number) =>
+    {
+      if(!this.isMealFinishedMap.get(key))
+        notFinished.push(key);
+    });
+
+    console.log(notFinished);
+    notFinished.forEach(notFinishedMealNr =>
+    {
+      this.pfckLeftInEachMeal.get(notFinishedMealNr).protein += Math.round(pfckLeftInMealToFinish.protein / notFinished.length);
+      this.pfckLeftInEachMeal.get(notFinishedMealNr).fat += Math.round(pfckLeftInMealToFinish.fat / notFinished.length);
+      this.pfckLeftInEachMeal.get(notFinishedMealNr).carbo += Math.round(pfckLeftInMealToFinish.carbo / notFinished.length);
+      this.pfckLeftInEachMeal.get(notFinishedMealNr).kcal +=  Math.round(pfckLeftInMealToFinish.kcal / notFinished.length);
+    });
+
+    console.log(this.pfckLeftInEachMeal);
+  }
+
+  sendIngredientsToShoppingList() {
+    console.log(this.recipes)
+    let productsWrapper = new ProductsWrapper();
+    let productsToShoppingList: Array<Product> = [];
+    for (let [key, recipes] of this.recipes)
+    {
+      recipes.forEach( recipe =>
+      {
+        recipe.products.forEach(product =>
+        {
+          productsToShoppingList.push(product);
+        })
+      })
+    }
+    productsWrapper.products = productsToShoppingList;
+
+    console.log(productsWrapper)
+    this.shoppingListService.addProducts(productsWrapper).toPromise()
+      .then(response => console.log(response)).catch(err => console.log(err));
 
   }
 }

@@ -8,5 +8,6 @@ export class Product
   fat: number;
   kcal: number;
   carbo: number;
+  innerId: number;
   divisible: boolean;
 }

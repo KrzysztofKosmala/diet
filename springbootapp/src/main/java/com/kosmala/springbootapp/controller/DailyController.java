@@ -83,6 +83,7 @@ public class DailyController
 
                 ProductPayload productPayload = new ProductPayload();
 
+                //na kostruktor zamienic
                 Product productFromDailyConsumption = dailyConsumptionProductAmount.getProduct();
                 productPayload.setAmount(mealAmount.getAmount());
                 productPayload.setMin_value(productFromDailyConsumption.getMin_value());
@@ -102,18 +103,20 @@ public class DailyController
         });
         dailyPayload.setProductAmountMealNumbers(productAmountMealNumbers);
 
-
-
         List<RecipeMultiplierMealNumber> recipesMultiplierMealNumber = new ArrayList<>();
-        daily.getRecipes().forEach(recipe ->
-        {
-            RecipeMultiplierMealNumber recipeMultiplierMealNumber = new RecipeMultiplierMealNumber();
-            RecipePayload recipePayload = new RecipePayload(recipe.getRecipe());
-            recipePayload.setMultiplier(recipe.getMultiplier());
-            recipeMultiplierMealNumber.setRecipe(recipePayload);
-            recipeMultiplierMealNumber.setMealNumber(recipe.getMealNumber());
-            recipesMultiplierMealNumber.add(recipeMultiplierMealNumber);
-        });
+        daily.getRecipes().forEach(dailyConsumptionRecipeMultiplier ->
+                {
+                    dailyConsumptionRecipeMultiplier.getMealMultiplier().forEach(mealMultiplier ->
+                    {
+                        //na kostruktor zamienic
+                        RecipeMultiplierMealNumber recipeMultiplierMealNumber = new RecipeMultiplierMealNumber();
+                        Recipe recipe = dailyConsumptionRecipeMultiplier.getRecipe();
+                        RecipePayload recipePayload = new RecipePayload(recipe, mealMultiplier.getMultiplier());
+                        recipeMultiplierMealNumber.setRecipe(recipePayload);
+                        recipeMultiplierMealNumber.setMealNumber(mealMultiplier.getMealNumber());
+                        recipesMultiplierMealNumber.add(recipeMultiplierMealNumber);
+                    });
+                });
 
         dailyPayload.setRecipesMultiplierMealNumber(recipesMultiplierMealNumber);
 
@@ -144,32 +147,41 @@ public class DailyController
 
         for(Map.Entry<String, List<ProductAmountMealNumber>> pair : groupedDailyRequestByNameOfProduct.entrySet())
         {
+            //na kostruktor zamienic
             DailyConsumptionProductAmount dailyConsumptionProductAmount = new DailyConsumptionProductAmount();
             dailyConsumptionProductAmount.setDaily(updatedDaily);
             dailyConsumptionProductAmount.setProduct(productRepository.findByName(pair.getKey()));
             pair.getValue().forEach(productAmountMealNumber ->
-            {
-                MealAmount mealAmount = new MealAmount();
-                mealAmount.setAmount(productAmountMealNumber.getProduct().getAmount());
-                mealAmount.setMealNumber(productAmountMealNumber.getMealNumber());
-                dailyConsumptionProductAmount.getMealAmounts().add(mealAmount);
-            });
+                    {
+                        MealAmount mealAmount = new MealAmount();
+                        mealAmount.setAmount(productAmountMealNumber.getProduct().getAmount());
+                        mealAmount.setMealNumber(productAmountMealNumber.getMealNumber());
+                        dailyConsumptionProductAmount.getMealAmounts().add(mealAmount);
+                    });
             products.add(dailyConsumptionProductAmount);
             dailyConsumptionProductAmountRepository.save(dailyConsumptionProductAmount);
         }
         updatedDaily.setProducts(products);
 
+        Map<String, List<RecipeMultiplierMealNumber>> groupedDailyRequestByNameOfRecipe =
+                dailyPayload.getRecipesMultiplierMealNumber().stream().collect(Collectors.groupingBy(e -> e.getRecipe().getName()));
 
-        dailyPayload.getRecipesMultiplierMealNumber().forEach(recipe ->
+        for(Map.Entry<String, List<RecipeMultiplierMealNumber>> pair : groupedDailyRequestByNameOfRecipe.entrySet())
         {
+            //na kostruktor zamienic
             DailyConsumptionRecipeMultiplier dailyConsumptionRecipeMultiplier = new DailyConsumptionRecipeMultiplier();
             dailyConsumptionRecipeMultiplier.setDaily(updatedDaily);
-            dailyConsumptionRecipeMultiplier.setRecipe(recipeRepository.findByName(recipe.getRecipe().getName()));
-            dailyConsumptionRecipeMultiplier.setMealNumber(recipe.getMealNumber());
-            dailyConsumptionRecipeMultiplier.setMultiplier(recipe.getRecipe().getMultiplier());
+            dailyConsumptionRecipeMultiplier.setRecipe(recipeRepository.findByName(pair.getKey()));
+            pair.getValue().forEach(recipeMultiplierMealNumber ->
+                    {
+                        MealMultiplier mealMultiplier = new MealMultiplier();
+                        mealMultiplier.setMealNumber(recipeMultiplierMealNumber.getMealNumber());
+                        mealMultiplier.setMultiplier(recipeMultiplierMealNumber.getRecipe().getMultiplier());
+                        dailyConsumptionRecipeMultiplier.getMealMultiplier().add(mealMultiplier);
+                    });
             recipes.add(dailyConsumptionRecipeMultiplier);
             dailyConsumptionRecipeMultiplierRepository.save(dailyConsumptionRecipeMultiplier);
-        });
+        }
 
         updatedDaily.setRecipes(recipes);
 

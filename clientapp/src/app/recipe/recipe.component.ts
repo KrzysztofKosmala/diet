@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {UserDetailInfoServiceService} from "../service/user-detail-info-service.service";
 import {ProductService} from "../service/product.service";
-import {Product} from "../payload/Product";
+import {Product} from "../service/payload/Product";
 import {FormControl, FormGroup} from "@angular/forms";
 import {RecipeService} from "../service/recipe.service";
 
@@ -35,20 +35,21 @@ export class RecipeComponent implements OnInit {
 
     name : new FormControl(),
     description: new FormControl(),
-    type: new FormControl(),
+    type1: new FormControl(),
+    type2: new FormControl(),
   });
 
   transformMetricMapWordToMetric  = new Map([['milliliter', 'ML'], ['gram', 'GR'], ['piece', 'PC']]);
   transformMetricMapMetricToWord  = new Map([['ML', 'milliliter'], ['GR', 'gram'], ['PC', 'pieces']]);
 
-  searchProduct(form)
+  addProductToIngredients(form)
   {
             if(form.amountOfProduct > this.selectedAsIngredient.min_value) {
               this.selectedAsIngredient.amount = form.amountOfProduct;
               this.chossenProductList.push(this.selectedAsIngredient);
               this.isMnValueOk =true;
               this.isProductInDb = true;
-              console.log(this.chossenProductList);
+              this.addProductForm.reset();
             }else {
               this.isMnValueOk = false;
             }
@@ -59,16 +60,14 @@ export class RecipeComponent implements OnInit {
 
   createRecipe(formValue) {
 
-    this.chossenProductList.forEach(product => {
-      product.metric = this.transformMetricMapWordToMetric.get(product.metric)
-    });
-
     //zamienic na Recipe
+
     var json =
       {
         name: formValue.name,
         description: formValue.description,
-        type: formValue.type,
+        type1 : formValue.type1,
+        type2 : formValue.type2,
         products: this.chossenProductList,
       };
 
@@ -77,6 +76,9 @@ export class RecipeComponent implements OnInit {
       {
         console.log(data);
         this.successfullyAdded =true;
+        this.recipeForm.reset();
+        this.chossenProductList= [];
+        this.searchedProductListBasedOnInputChange =[];
       }
       )
       .catch(error =>
@@ -85,6 +87,7 @@ export class RecipeComponent implements OnInit {
         this.successfullyAdded = false;
       }
     )
+
 
   }
 
@@ -109,6 +112,8 @@ export class RecipeComponent implements OnInit {
     this.selectedAsIngredient = null;
 
     this.selectedAsIngredient = e.option.value;
+    console.log("selected as ogridient")
     console.log(e.option.value)
+
   }
 }

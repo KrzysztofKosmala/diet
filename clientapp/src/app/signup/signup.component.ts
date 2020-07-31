@@ -6,6 +6,7 @@ import { CrossFieldErrorMatcher } from '../signup/infrastructure/cross-field-err
 import { passwordsDoNotMatch } from '../signup/infrastructure/passwords-do-not-match.validator';
 import { FormComponentBase } from '../signup/infrastructure/form-component-base';
 import {HttpErrorResponse} from "@angular/common/http";
+import {ShoppingListService} from "../service/shopping-list.service";
 
 /*TODO
 *  email to comfirm user email

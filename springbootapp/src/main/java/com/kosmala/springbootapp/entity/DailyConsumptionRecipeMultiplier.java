@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "daily_consumption_recipe_multipier")
@@ -26,9 +28,6 @@ public class DailyConsumptionRecipeMultiplier implements Serializable
     @MapsId("recipeId")
     private Recipe recipe;
 
-    @Column(name = "multipiler")
-    private double multiplier;
-
-    @Column(name = "mealNumber")
-    private int mealNumber;
+    @ElementCollection
+    List<MealMultiplier> mealMultiplier = new ArrayList<>();
 }

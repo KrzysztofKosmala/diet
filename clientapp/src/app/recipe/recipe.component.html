@@ -18,8 +18,18 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="margin-left: 10px">
-        <mat-label >Type</mat-label>
-        <mat-select formControlName="type">
+        <mat-label >Type 1</mat-label>
+        <mat-select formControlName="type1">
+          <mat-option value="BREAKFAST">Breakfast</mat-option>
+          <mat-option value="DINNER">Dinner</mat-option>
+          <mat-option value="SUPPER">Supper</mat-option>
+          <mat-option value="SNACK">Snack</mat-option>
+          <mat-option value="DESSERT">Dessert</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" style="margin-left: 10px">
+        <mat-label >Optional type 2</mat-label>
+        <mat-select formControlName="type2">
           <mat-option value="BREAKFAST">Breakfast</mat-option>
           <mat-option value="DINNER">Dinner</mat-option>
           <mat-option value="SUPPER">Supper</mat-option>
@@ -85,12 +95,12 @@
 
 </form>
 <button mat-raised-button
-        (click)="searchProduct(addProductForm.value);"
+        (click)="addProductToIngredients(addProductForm.value);"
         color="primary">Add product to ingredients
 </button>
 
 <mat-nav-list>
-  <a mat-list-item  *ngFor="let product of chossenProductList">• {{product.amount}} {{transformMetricMapMetricToWord.get(product.metric)}} of {{ product.name}} /s </a>
+  <a mat-list-item  *ngFor="let product of chossenProductList">•  of {{ product.name}}  {{product.amount}} {{transformMetricMapMetricToWord.get(product.metric)}}</a>
 </mat-nav-list>
 </div>
 </div>

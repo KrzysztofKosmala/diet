@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Product} from "../payload/Product";
+import {Product} from "./payload/Product";
 import {DailyPayload} from "../daily/dailyPayload";
 
 @Injectable({

@@ -1,6 +1,6 @@
-import {Product} from "../payload/Product";
-import {ProductAmountMealNumber} from "../payload/ProductAmountMealNumber";
-import {RecipeMultiplierMealNumber} from "../payload/RecipeMultiplierMealNumber";
+import {Product} from "../service/payload/Product";
+import {ProductAmountMealNumber} from "../service/payload/ProductAmountMealNumber";
+import {RecipeMultiplierMealNumber} from "../service/payload/RecipeMultiplierMealNumber";
 
 export class DailyPayload
 {
@@ -10,6 +10,6 @@ export class DailyPayload
   protein: number;
   fat: number;
   carbo: number;
-  productAmountMealNumbers: Array<ProductAmountMealNumber>;
-  recipesMultiplierMealNumber: Array<RecipeMultiplierMealNumber>;
+  productAmountMealNumbers= new Array<ProductAmountMealNumber>();
+  recipesMultiplierMealNumber= new  Array<RecipeMultiplierMealNumber>();
 }

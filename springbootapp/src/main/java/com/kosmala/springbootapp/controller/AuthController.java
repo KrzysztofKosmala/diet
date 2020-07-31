@@ -97,6 +97,8 @@ public class AuthController
 
         user.setRoles(Collections.singleton(userRole));
 
+
+
         User result = userRepository.save(user);
 
         return ResponseEntity.ok(new CustomResponse(true, "User registered successfully"));

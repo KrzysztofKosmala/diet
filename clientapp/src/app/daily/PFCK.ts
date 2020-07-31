@@ -1,5 +1,5 @@
-import {Product} from "../payload/Product";
-import {Recipe} from "../payload/Recipe";
+import {Product} from "../service/payload/Product";
+import {Recipe} from "../service/payload/Recipe";
 
 export class PFCK
 {
@@ -19,6 +19,7 @@ export class PFCK
   {
     recipe.products.forEach(product => this.subtractProduct(product));
   }
+
 
 
   subtractProduct(product: Product)

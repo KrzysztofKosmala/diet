@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {UserDetailInfoServiceService} from "../service/user-detail-info-service.service";
-import {UserDetails} from "../payload/user-details";
+import {UserDetails} from "../service/payload/user-details";
 import {HttpErrorResponse} from "@angular/common/http";
 import {FormControl, FormGroup} from "@angular/forms";
 import {Router} from "@angular/router";

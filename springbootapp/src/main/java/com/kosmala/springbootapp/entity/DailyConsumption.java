@@ -30,10 +30,10 @@ public class DailyConsumption
 
     private int currentAmountOfMeals;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily", orphanRemoval = true, fetch=FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily",  fetch=FetchType.EAGER)
     private Set<DailyConsumptionRecipeMultiplier> recipes = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily", orphanRemoval = true, fetch=FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily",  fetch=FetchType.EAGER)
     private Set<DailyConsumptionProductAmount> products = new HashSet<>();
 
 }

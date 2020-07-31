@@ -25,7 +25,7 @@ public class ProductPayload
     //needed only for recipe
     private double amount;
 
-    ProductPayload(Product product)
+    public ProductPayload(Product product)
     {
         this.name = product.getName();
         this.protein = product.getProtein();
@@ -38,4 +38,17 @@ public class ProductPayload
 
     }
 
+    public ProductPayload(Product product , double amount)
+    {
+        this.name = product.getName();
+        this.protein = product.getProtein();
+        this.fat = product.getFat();
+        this.carbo = product.getCarbo();
+        this.min_value = product.getMin_value();
+        this.metric = product.getMetric().name();
+        this.kcal = product.getKcal();
+        this.divisible = product.isDivisible();
+        this.amount = amount;
+
+    }
 }

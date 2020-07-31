@@ -42,6 +42,7 @@ import {YoutubePlayerModule} from "ng2-youtube-player";
 import {VideoModule} from "./video/video.module";
 import { HelloComponent } from './hello/hello.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 
 
 
@@ -59,6 +60,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
     RecipeComponent,
     DailyComponent,
     HelloComponent,
+    ShoppingListComponent,
 
 
 

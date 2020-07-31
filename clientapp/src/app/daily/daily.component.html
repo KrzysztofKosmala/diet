@@ -20,6 +20,34 @@
 
 </mat-toolbar>
 
+<!--<div style="/* display:inline-block;*/ position: absolute; background: #edf1f5; z-index: 1000; border: thin solid; width: 50%; margin-top: 1%; margin-left: 8%" *ngIf="isPopupOpened" >
+&lt;!&ndash;  <mat-toolbar class="bg-dark white-text" style="min-height: 30px; max-height: 30px" > </mat-toolbar>&ndash;&gt;</div>-->
+    <mat-card class="example-card" style="/* display:inline-block;*/ position: absolute; background: #edf1f5; z-index: 1000; border: thin solid; width: 50%; margin-top: 1%; margin-left: 8%" *ngIf="isPopupOpened">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>{{hintedRecipe.name}}</mat-card-title>
+        <span class="spacer"></span>
+        <mat-icon class="icon" aria-hidden="false" aria-label="Example user verified icon" (click)="isPopupOpened = false; currentMealNrForRecipeSearch = null">close</mat-icon>
+        <mat-card-subtitle>kcal {{hintedRecipe.kcal}}</mat-card-subtitle>
+      </mat-card-header>
+      <!--<img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
+      <mat-card-content>
+        <p>
+          {{hintedRecipe.description}}
+        </p>
+      </mat-card-content>
+      <mat-list *ngFor="let ingredient of hintedRecipe.products" style="padding: 0!important;">
+        <mat-list-item >
+          <span style="font-size:12px">{{ingredient.name}}</span>
+        </mat-list-item>
+      </mat-list>
+      <mat-card-actions>
+        <button mat-button (click)="addRecipeWithProductsToMeal(currentMealNrForRecipeSearch, hintedRecipe)">OK</button>
+        <button mat-button>Find another one</button>
+      </mat-card-actions>
+    </mat-card>
+
+
 
 <div style="width:35%; display:inline-block; float: left; margin-left: 10%">
 <div *ngFor="let i of amountOfMeals" >
@@ -133,7 +161,7 @@
         </div>
         <span class="spacer"></span>
         <div >
-          <button (click)="findMeal(i);"
+          <button (click)="openPopupAndFindMeal(i);"
                   style="min-height: 15px !important;
                       min-width: 15px !important;
                       font-size: 8px !important;
@@ -222,7 +250,7 @@ height: 10%"
   </button>
 
   <button mat-raised-button
-        (click)="save()"
+        (click)="sendIngredientsToShoppingList()"
         color="primary">Send ingredients to shopping list
   </button>
 

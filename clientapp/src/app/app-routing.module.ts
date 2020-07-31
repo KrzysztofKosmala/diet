@@ -9,6 +9,7 @@ import {ProductComponent} from "./product/product.component";
 import {RecipeComponent} from "./recipe/recipe.component";
 import {DailyComponent} from "./daily/daily.component";
 import {HelloComponent} from "./hello/hello.component";
+import {ShoppingListComponent} from "./shopping-list/shopping-list.component";
 
 
 const routes: Routes = [
@@ -25,7 +26,8 @@ const routes: Routes = [
         {path: 'product' ,component: ProductComponent},
         {path: 'recipe' ,component: RecipeComponent},
         {path: 'daily' ,component: DailyComponent},
-        {path: 'hello' ,component: HelloComponent}
+        {path: 'hello' ,component: HelloComponent},
+        {path: 'shoppingList' ,component: ShoppingListComponent}
 
       ]
 }

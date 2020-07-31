@@ -25,9 +25,12 @@ public class Recipe
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(columnDefinition="text")
     private String description;
     @Enumerated(EnumType.STRING)
-    private TypeOfRecipe type;
+    private TypeOfRecipe type1;
+    @Enumerated(EnumType.STRING)
+    private TypeOfRecipe type2;
     private double protein_ratio;
     private double fat_ratio;
     private double carbo_ratio;
