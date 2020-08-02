@@ -95,17 +95,24 @@ public class UsersController
 
 
         //add checking if counting is needed
-        detailedUserInfoTuUpdate.setCaloric_intake(userDetailsRequest.getCaloric_intake());
-        detailedUserInfoTuUpdate.setProtein(userDetailsRequest.getProtein());
-        detailedUserInfoTuUpdate.setFat(userDetailsRequest.getFat());
-        detailedUserInfoTuUpdate.setCarbo(userDetailsRequest.getCarbo());
+
+
         detailedUserInfoTuUpdate.setGender(GenderName.valueOf(userDetailsRequest.getGender()));
         detailedUserInfoTuUpdate.setWeight(userDetailsRequest.getWeight());
         detailedUserInfoTuUpdate.setHeight(userDetailsRequest.getHeight());
         detailedUserInfoTuUpdate.setActivity(userDetailsRequest.getActivity());
         detailedUserInfoTuUpdate.setGoal(GoalName.valueOf(userDetailsRequest.getGoal()));
 
+        int caloricIntake = countCaloricIntake.count(detailedUserInfoTuUpdate);
 
+        detailedUserInfoTuUpdate.setCaloric_intake(caloricIntake);
+
+        //count ratio
+        Ratio ratio = countMacroRatio.countRatio(detailedUserInfoTuUpdate.getGender(), caloricIntake, detailedUserInfoTuUpdate.getWeight());
+        
+        detailedUserInfoTuUpdate.setProtein(ratio.getProtein());
+        detailedUserInfoTuUpdate.setFat(ratio.getFat());
+        detailedUserInfoTuUpdate.setCarbo(ratio.getCarbo());
         detailedUserInfoRepository.save(detailedUserInfoTuUpdate);
 
         return ResponseEntity.ok(new CustomResponse(true, "User detail info has been updated successfully"));

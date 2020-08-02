@@ -1,1 +1,55 @@
-<p>shopping-list works!</p>
+<div  fxLayoutAlign="space-around center" style="display:inline-block;">
+  <div>
+<form class="form-form" [formGroup]="addProductForm" style="padding-top: 20px" >
+  <mat-form-field class="wrap" appearance="fill">
+    <mat-label >Name of product in database</mat-label>
+    <input  matInput autocomplete="off" formControlName="searchForProduct" (keyup)="pingingSearch($event)" >
+  </mat-form-field>
+
+  <mat-selection-list [multiple]="false" appearance="fill" style="margin-bottom: 18px; padding: 0" #list (selectionChange)="onSelection($event, list.selectedOptions)">
+    <mat-list-option mat-list-item  *ngFor="let product of searchedProductListBasedOnInputChange" [value]="product" >
+      <span style="font-size:14px">{{product.name}}</span>
+      <span style="font-size:10px; color: gray">
+        kcal {{product.kcal}} | P {{product.protein}} | F {{product.fat}} | C {{product.carbo}} /
+        <span *ngIf="product.metric!='PC'" style="font-size:10px; color: gray"> 100 </span>
+        <span *ngIf="product.metric=='PC'" style="font-size:10px; color: gray"> piece </span>
+        <span *ngIf="product.metric!='PC'" style="font-size:10px; color: gray">  {{product.metric}} </span>
+      </span>
+      <span style="font-size:10px; color: gray">  </span>
+    </mat-list-option>
+  </mat-selection-list>
+
+  <mat-form-field appearance="fill">
+    <mat-label *ngIf="selectedToAdd!=null" >Amount of {{transformMetricMapMetricToWord.get(selectedToAdd.metric)}}</mat-label>
+    <mat-label *ngIf="selectedToAdd==null" >Amount </mat-label>
+    <input matInput formControlName="amountOfProduct">
+  </mat-form-field>
+
+</form>
+  <button mat-raised-button
+          (click)="addProductToShoppingList(addProductForm.value);"
+          color="primary">Add product to shopping list
+  </button>
+</div>
+
+<mat-list style="width: 30%; display:inline-block;">
+  Shopping List
+  <mat-list-item *ngFor="let product of this.products; let x = index " >
+    {{product.name}} {{product.amount}} {{this.transformMetricMapMetricToWord.get(product.metric)}}
+    <span class="spacer"></span>
+    <button (click)="removeProduct(x)" style="min-height: 15px !important;
+      min-width: 15px !important;
+      font-size: 8px !important;
+      line-height: 0px; " mat-raised-button color="primary">
+      <mat-icon >remove</mat-icon>
+    </button>
+
+  </mat-list-item>
+</mat-list>
+</div>
+
+<button mat-raised-button
+        style="clear:both;"
+        (click)="save();"
+        color="primary">Save
+</button>

@@ -9,7 +9,7 @@ import {FormControl, FormGroup} from "@angular/forms";
   styleUrls: ['./product.component.css']
 })
 export class ProductComponent implements OnInit {
-  private createdSuccessfully: boolean;
+  private createdSuccessfully: boolean = false;
 
   constructor(private router: Router, private productService: ProductService) { }
 
@@ -35,15 +35,7 @@ export class ProductComponent implements OnInit {
 
   createProduct(product)
   {
-/*    var json ={
-      name: product.name,
-      protein: product.protein,
-      fat: product.fat,
-      carbo: product.carbo,
-      min_value: product.min_value,
-      metric
-    }*/
-    console.log(product);
+
   this.productService.createProduct(product).toPromise().then(data =>
   {
     this.createdSuccessfully = true;

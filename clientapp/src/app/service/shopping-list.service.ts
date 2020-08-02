@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {Product} from "./payload/Product";
+import {ProductsWrapper} from "./payload/ProductsWrapper";
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +23,11 @@ export class ShoppingListService {
 
   getProducts()
   {
-    return this.http.get(this.BASE_URL);
+    return this.http.get<ProductsWrapper>(this.BASE_URL);
   }
 
+  updateList(products)
+  {
+    return this.http.post(this.BASE_URL+"/updateList", products);
+  }
 }

@@ -1,6 +1,11 @@
 <mat-toolbar class="bg-transparent black-text" fxLayout="column" style="margin-top: 1%">
   <span class="title-center">Product</span>
 </mat-toolbar>
+<div *ngIf="createdSuccessfully; ">
+  <div class="alert alert-success" >
+    Thanks, product has been successfully added!
+  </div>
+</div>
 <form class="form-form" [formGroup]="form"  fxLayout="row" fxLayoutAlign="space-around center">
 
   <mat-form-field appearance="fill">

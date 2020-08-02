@@ -52,14 +52,14 @@ public class ShoppingListController
     }
 
     @PostMapping("/addProducts")
-    public ResponseEntity addProducts(@AuthenticationPrincipal UserPrincipal currentUser,@RequestBody ProductsWrapper products)
+    public ResponseEntity addProductsFromDaily(@AuthenticationPrincipal UserPrincipal currentUser,@RequestBody ProductsWrapper products)
     {
         //zmienic zeby updatowal a nie usuwal
 
         //ProductsWrapper - trzyma liste produktów reprezentowanych jako dane do przesyłu. Ogólnie payload znaczy tyle że encje Product zamienia na jsona -> ProductPayload
         //products - to są produkty ktore maja zostac dodane do shopping list current usera
 
-
+        //wyciagam istniejace shoppingList dla current usera
         ShoppingList shoppingList = shoppingListRepository.findByUserId(currentUser.getId());
 
 
@@ -105,6 +105,32 @@ public class ShoppingListController
             shoppingListRepository.save(updatedShoppingList);
         });
 
+        return ResponseEntity.ok(new CustomResponse(true, "ok"));
+    }
+
+    @PostMapping("/updateList")
+    public ResponseEntity updateShoppingList(@AuthenticationPrincipal UserPrincipal currentUser, @RequestBody ProductsWrapper products)
+    {
+        ShoppingList shoppingList = shoppingListRepository.findByUserId(currentUser.getId());
+        ShoppingList updatedShoppingList = new ShoppingList();
+
+        userRepository.findByUsername(currentUser.getUsername()).ifPresent(loggedUser ->
+        {
+            updatedShoppingList.setUser(loggedUser);
+            shoppingListRepository.delete(shoppingList);
+            Set<ShoppingListProductAmount> newProductsForShoppingList = new HashSet<>();
+
+            products.getProducts().forEach(productPayload ->
+            {
+                ShoppingListProductAmount shoppingListProductAmount = new ShoppingListProductAmount();
+                shoppingListProductAmount.setProduct(productRepository.findByName(productPayload.getName()));
+                shoppingListProductAmount.setAmount(productPayload.getAmount());
+                shoppingListProductAmount.setShoppingList(updatedShoppingList);
+                newProductsForShoppingList.add(shoppingListProductAmount);
+            });
+            updatedShoppingList.setProducts(newProductsForShoppingList);
+            shoppingListRepository.save(updatedShoppingList);
+        });
         return ResponseEntity.ok(new CustomResponse(true, "ok"));
     }
 
