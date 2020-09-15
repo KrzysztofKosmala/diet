@@ -1,13 +1,10 @@
 package com.kosmala.springbootapp.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.kosmala.springbootapp.entity.Metric;
-import com.kosmala.springbootapp.entity.Recipe;
-import com.kosmala.springbootapp.entity.RecipeProductAmount;
-import com.kosmala.springbootapp.entity.TypeOfRecipe;
+import com.kosmala.springbootapp.entity.*;
+import com.kosmala.springbootapp.exception.ResourceNotFoundException;
 import com.kosmala.springbootapp.helpers.countCaloricIntake.PFCRatio;
 import com.kosmala.springbootapp.payload.CustomResponse;
-import com.kosmala.springbootapp.payload.PFCK;
 import com.kosmala.springbootapp.payload.ProductPayload;
 import com.kosmala.springbootapp.payload.RecipePayload;
 import com.kosmala.springbootapp.repository.ProductRepository;
@@ -22,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,6 +36,8 @@ public class RecipeController
     @Autowired
     RecipeProductAmountRepository recipeProductAmountRepository;
 
+/*    @Autowired
+    Dailyrepo*/
 
     @GetMapping("/getIngredients")
     public ResponseEntity getIngredients(@RequestParam String nameOfRecipe)
@@ -67,9 +65,9 @@ public class RecipeController
                 .mapToDouble(product -> (product.getKcal() * product.getAmount()))
                 .sum();
 
-        recipe.setKcal(sumOfKcalFromProductsWithMetricNotEqualToPC + sumOfKcalFromProductsWithMetricEqualToPC);
+        recipe.setKcal(DoubleRounder.round(sumOfKcalFromProductsWithMetricNotEqualToPC + sumOfKcalFromProductsWithMetricEqualToPC, 0));
 
-        PFCRatio pfcRatio = countPFCRatio(recipePayload.getProducts());
+        PFCRatio pfcRatio = countPFCRatioForListOfProductPayload(recipePayload.getProducts());
         recipe.setProtein_ratio(pfcRatio.getProtein_ratio());
         recipe.setFat_ratio(pfcRatio.getFat_ratio());
         recipe.setCarbo_ratio(pfcRatio.getCarbo_ratio());
@@ -90,17 +88,48 @@ public class RecipeController
     }
 
     @GetMapping("/hintTheRecipe")
-    public RecipePayload findRecipeBasedOnNeededPFCK(@AuthenticationPrincipal UserPrincipal currentUser, @RequestParam double protein, @RequestParam double fat, @RequestParam double carbo, @RequestParam double kcal)
+    public RecipePayload findRecipeBasedOnNeededPFCK(@AuthenticationPrincipal UserPrincipal currentUser,
+                                                     @RequestParam double protein, @RequestParam double fat,
+                                                     @RequestParam double carbo, @RequestParam double kcal,
+                                                     @RequestParam int mealNr, @RequestParam int amountOfMeals,
+                                                     @RequestParam(value="excluded") List<String> excluded)
     {
-            Recipe recipe = recipeRepository.findByName("test");
-            RecipePayload recipePayload = new RecipePayload(recipe, 2.0);
 
-            return recipePayload;
+
+        TypeOfRecipeWrapper typeOfRecipeWrapper = new TypeOfRecipeWrapper(amountOfMeals);
+
+        List<TypeOfRecipe> typeOfMealsToSearch = typeOfRecipeWrapper.getTypeOfMealsForMealNr(mealNr);
+
+        PFCRatio pfcRatioForRequest = countPFCRatio(protein, fat, carbo);
+
+
+        List<Recipe> bestMatches = recipeRepository.findBestMatches(pfcRatioForRequest.getProtein_ratio(), pfcRatioForRequest.getFat_ratio(), pfcRatioForRequest.getCarbo_ratio());
+            if(bestMatches.isEmpty())
+            return new RecipePayload("Not found recipe for this requirements", "empty");
+
+            List<Recipe> withoutExcluded = bestMatches.stream().filter(e -> !excluded.contains(e.getName())).collect(Collectors.toList());
+
+            List<RecipePayload> recipePayloads = new LinkedList<>();
+            if(withoutExcluded.isEmpty())
+            return new RecipePayload("Not found recipe for this requirements", "empty");
+
+            withoutExcluded.forEach(recipe ->
+            {
+                recipePayloads.add(new RecipePayload(recipe, (kcal*100/recipe.getKcal())/100));
+            });
+
+            recipePayloads.sort((o1, o2) ->
+            {
+                return Double.compare(Math.abs(o2.getKcal() - kcal), Math.abs(o1.getKcal() -kcal));
+            });
+            return recipePayloads.get(0);
+
+
     }
 
-    public PFCRatio countPFCRatio(List<ProductPayload> productPayloadList)
+    public PFCRatio countPFCRatioForListOfProductPayload(List<ProductPayload> productPayloadList)
     {
-        PFCRatio pfcRatio = new PFCRatio();
+
 
         double protein = productPayloadList.stream()
                 .filter(productPayload -> productPayload.getMetric().equals(Metric.PC.name()))
@@ -124,8 +153,12 @@ public class RecipeController
                 .mapToDouble(product -> product.getCarbo() * product.getAmount() /100)
                 .sum();
 
+        return countPFCRatio(protein, fat, carbo);
+    }
 
-
+    public PFCRatio countPFCRatio(double protein, double fat, double carbo)
+    {
+        PFCRatio pfcRatio = new PFCRatio();
         Optional<Double> standardizationValue = Stream.of(protein, fat, carbo).sorted().filter(value -> value > 0).findFirst();
 
         standardizationValue.ifPresent(
@@ -154,5 +187,7 @@ public class RecipeController
         productPayload.setName(recipeProductAmount.getProduct().getName());
         return productPayload;
     }
+
+
 
 }

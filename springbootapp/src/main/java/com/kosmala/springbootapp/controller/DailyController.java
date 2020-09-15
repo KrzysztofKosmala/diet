@@ -31,11 +31,11 @@ public class DailyController
     DailyConsumptionRecipeMultiplierRepository dailyConsumptionRecipeMultiplierRepository;
 
     @GetMapping
-    public DailyPayload init(@AuthenticationPrincipal UserPrincipal currentUser, @RequestParam String date)
+    public DailyPayload init(@AuthenticationPrincipal UserPrincipal currentUser, @RequestParam String currentDate, @RequestParam String dayBefore)
     {
         DailyPayload dailyPayload = new DailyPayload();
 
-        if (!dailyConsumptionRepository.existsByUserIdAndDate(currentUser.getId(), date))
+        if (!dailyConsumptionRepository.existsByUserIdAndDate(currentUser.getId(), currentDate))
         {
 
             DailyConsumption dailyConsumption = new DailyConsumption();
@@ -49,18 +49,19 @@ public class DailyController
                         dailyPayload.setProtein(detailedUserInfo.getProtein());
                         dailyPayload.setFat(detailedUserInfo.getFat());
                         dailyPayload.setCarbo(detailedUserInfo.getCarbo());
+                        dailyPayload.setExcludedRecipesFromDayBefore(new LinkedList<>());
                         dailyConsumption.setUser(e);
                         dailyConsumption.setCurrentAmountOfMeals(detailedUserInfo.getAmount_of_meals());
 
                     }
             );
-            dailyConsumption.setDate(date);
+            dailyConsumption.setDate(currentDate);
             dailyConsumptionRepository.save(dailyConsumption);
             return dailyPayload;
         }
 
 
-        DailyConsumption daily = dailyConsumptionRepository.findByUserIdAndDate(currentUser.getId(), date);
+        DailyConsumption daily = dailyConsumptionRepository.findByUserIdAndDate(currentUser.getId(), currentDate);
 
 
 
@@ -71,7 +72,17 @@ public class DailyController
         dailyPayload.setProtein(detailedUserInfo.getProtein());
         dailyPayload.setFat(detailedUserInfo.getFat());
         dailyPayload.setKcal(detailedUserInfo.getCaloric_intake());
-        dailyPayload.setDate(date);
+        dailyPayload.setDate(currentDate);
+
+
+        DailyConsumption byUserIdAndDate = dailyConsumptionRepository.findByUserIdAndDate(currentUser.getId(), dayBefore);
+        if(byUserIdAndDate != null)
+        {
+            List<DailyConsumptionRecipeMultiplier> dailyConsumptionRecipeMultipliersByDailyId = dailyConsumptionRecipeMultiplierRepository.findDailyConsumptionRecipeMultipliersByDailyId(byUserIdAndDate.getId());
+            dailyPayload.setExcludedRecipesFromDayBefore(dailyConsumptionRecipeMultipliersByDailyId.stream()
+                    .map(dailyConsumptionRecipeMultiplier -> dailyConsumptionRecipeMultiplier.getRecipe().getName())
+                    .collect(Collectors.toList()));
+        }
 
         List<ProductAmountMealNumber> productAmountMealNumbers = new ArrayList<>();
         daily.getProducts().forEach(dailyConsumptionProductAmount ->

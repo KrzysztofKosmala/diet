@@ -41,6 +41,4 @@ public class Product
     @JsonIgnore
     @OneToMany(mappedBy = "product")
     private Set<ShoppingListProductAmount> shoppingList = new HashSet<>();
-
-
 }

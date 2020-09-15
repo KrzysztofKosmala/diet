@@ -19,6 +19,7 @@ import java.util.Set;
 @Setter
 @RequiredArgsConstructor
 @ToString
+
 public class Recipe
 {
     @Id

@@ -18,4 +18,5 @@ public class DailyPayload
     ////////////////////
     List<ProductAmountMealNumber> productAmountMealNumbers;
     List<RecipeMultiplierMealNumber> recipesMultiplierMealNumber;
+    List<String> excludedRecipesFromDayBefore;
 }

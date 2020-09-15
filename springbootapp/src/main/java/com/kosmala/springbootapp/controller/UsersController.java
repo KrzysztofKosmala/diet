@@ -109,7 +109,7 @@ public class UsersController
 
         //count ratio
         Ratio ratio = countMacroRatio.countRatio(detailedUserInfoTuUpdate.getGender(), caloricIntake, detailedUserInfoTuUpdate.getWeight());
-        
+
         detailedUserInfoTuUpdate.setProtein(ratio.getProtein());
         detailedUserInfoTuUpdate.setFat(ratio.getFat());
         detailedUserInfoTuUpdate.setCarbo(ratio.getCarbo());
