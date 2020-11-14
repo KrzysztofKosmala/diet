@@ -9,7 +9,7 @@ import {FormControl, FormGroup} from "@angular/forms";
   styleUrls: ['./product.component.css']
 })
 export class ProductComponent implements OnInit {
-  private createdSuccessfully: boolean = false;
+  createdSuccessfully: boolean = false;
 
   constructor(private router: Router, private productService: ProductService) { }
 

@@ -10,10 +10,7 @@ import set = Reflect.set;
 })
 export class RecipeService {
 
-  constructor(private http: HttpClient)
-  {
-
-  }
+  constructor(private http: HttpClient) {}
   BASE_URL = 'http://localhost:8080/api/recipe';
 
   createRecipe(recipe)
@@ -27,7 +24,10 @@ export class RecipeService {
       .set('protein', pfck.protein)
       .set('fat', pfck.fat)
       .set('carbo', pfck.carbo)
-      .set('kcal', pfck.kcal);
+      .set('kcal', pfck.kcal)
+      .set('mealNr', pfck.mealNr)
+      .set('amountOfMeals', pfck.amountOfMeals)
+      .set('excluded', pfck.excluded);
     return this.http.get<Recipe>(this.BASE_URL+"/hintTheRecipe",{params});
   }
 }

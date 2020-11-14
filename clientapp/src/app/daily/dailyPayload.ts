@@ -12,4 +12,5 @@ export class DailyPayload
   carbo: number;
   productAmountMealNumbers= new Array<ProductAmountMealNumber>();
   recipesMultiplierMealNumber= new  Array<RecipeMultiplierMealNumber>();
+  excludedRecipesFromDayBefore= new Array<String>();
 }

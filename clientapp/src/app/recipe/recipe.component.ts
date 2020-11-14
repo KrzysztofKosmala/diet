@@ -44,7 +44,7 @@ export class RecipeComponent implements OnInit {
 
   addProductToIngredients(form)
   {
-            if(form.amountOfProduct > this.selectedAsIngredient.min_value) {
+            if(form.amountOfProduct >= this.selectedAsIngredient.min_value) {
               this.selectedAsIngredient.amount = form.amountOfProduct;
               this.chossenProductList.push(this.selectedAsIngredient);
               this.isMnValueOk =true;

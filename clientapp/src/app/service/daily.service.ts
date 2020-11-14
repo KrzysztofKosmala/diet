@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Product} from "./payload/Product";
 import {DailyPayload} from "../daily/dailyPayload";
+import {formatDate} from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class DailyService
   getDailyByDate(date)
   {
     const params = new HttpParams()
-      .set('date', date);
+      .set('currentDate', date)
+      .set('dayBefore', formatDate(new Date(date).getTime() - 1*24*60*60*1000, 'yyyy-MM-dd', 'en'));
     return this.http.get<DailyPayload>(this.BASE_URL, {params});
   }
 

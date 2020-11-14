@@ -30,7 +30,7 @@ export class DailyComponent implements OnInit {
   }
 
   amountOfMeals;
-
+  meals;
   //sliders
   eatenKcalValue = 1;
   percentOfProtein = 1;
@@ -81,12 +81,19 @@ export class DailyComponent implements OnInit {
 
     this.dailyService.getDailyByDate(date.toString()).toPromise().then(response=>
     {
+
+      console.log("respose here");
       console.log(response)
       this.productsInMeals = new Map<number, Array<Product>>();
       this.recipes = new Map<number, Array<Recipe>>();
       this.pfckLeftInEachMeal =  new Map<number, PFCK>();
       this.isMealFinishedMap = new Map<number, boolean>();
       this.excludedRecipes = new Array<String>();
+      if(response.excludedRecipesFromDayBefore != null)
+      response.excludedRecipesFromDayBefore.forEach(ex =>
+      {
+        this.excludedRecipes.push(ex);
+      });
       for (var _i = 1; _i < response.amountOfMeals + 1; _i++)
       {
         this.productsInMeals.set(_i, new Array<Product>());
@@ -113,6 +120,7 @@ export class DailyComponent implements OnInit {
         this.pfckLeftInEachMeal.get(e.mealNumber).subtractRecipe(e.recipe);
       });
       this.amountOfMeals = Array(response.amountOfMeals).fill(0).map((x,i)=>i+1);
+      this.meals = response.amountOfMeals;
       this.initialData = response;
 
       console.log(response)
@@ -401,7 +409,10 @@ export class DailyComponent implements OnInit {
         kcal: neededPfck.kcal,
         protein: neededPfck.protein,
         carbo: neededPfck.carbo,
-        fat: neededPfck.fat
+        fat: neededPfck.fat,
+        mealNr: i,
+        amountOfMeals: this.meals,
+        excluded: this.excludedRecipes
       };
     this.recipeService.findRecipeBasedOnNeededPFCK(json).toPromise()
       .then(response => this.hintedRecipe = response)
