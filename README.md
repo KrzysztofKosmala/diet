@@ -52,7 +52,7 @@ The recipe presented below is closest to these ratio.
 
 ![](scrOfApp/recipeInDB.jpg)
 
-However, the starting amount of calorific value is as much as 911 kcal. The algorithm scales this recipe and sends it as suggestions to the user.
+However, the starting amount of calorific value for this recipe is 911 kcal. The algorithm scales this recipe and sends it as suggestions to the user.
 
 ![](scrOfApp/hintedRecipe.png)
 After scaling, the recipe is already matched to the request and its calorie count is 520.9
@@ -62,4 +62,9 @@ Then the recipe that has just been shown goes to the list of excluded and will n
 This way the user can search for recipes for each meal. A user who does not have the necessary ingredients to prepare can send them to the shopping list and look at it
 in the shop.
 ![](scrOfApp/shoppingList.png)
-# Creating product and recipe 
+# Creating product and recipe
+User is also allowed to adding products and recipies to DB.
+![](scrOfApp/product.png)
+![](scrOfApp/recipe.png)
+
+
