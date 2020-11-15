@@ -66,5 +66,7 @@ in the shop.
 User is also allowed to adding products and recipies to DB.
 ![](scrOfApp/product.png)
 ![](scrOfApp/recipe.png)
+# Database
+![](scrOfApp/diagram.png)
 
 
